@@ -12,6 +12,7 @@ import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -39,11 +40,14 @@ public abstract class Reservation implements Serializable {
     protected BigDecimal amount;
     @NotNull
     @Future
+    @Column(name = "checkIn", columnDefinition="DATETIME")
     protected Date checkIn;
     @NotNull
     @Future
+    @Column(name = "checkOut", columnDefinition="DATETIME")
     protected Date checkOut;
     @NotNull
+    @Column(name = "madeDate", columnDefinition="DATETIME")
     protected Date madeDate;
     @NotNull
     @Enumerated(EnumType.STRING)
