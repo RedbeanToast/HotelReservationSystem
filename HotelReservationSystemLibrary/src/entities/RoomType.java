@@ -5,7 +5,11 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Max;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -33,7 +37,7 @@ public class RoomType implements Serializable {
     @Size(min=1, max=20)
     @Column(unique=true)
     private String name;
-    private String dexcription;
+    private String description;
     @NotNull
     @Digits(integer=3, fraction=2)
     private BigDecimal size;
@@ -61,7 +65,7 @@ public class RoomType implements Serializable {
         this();
         
         this.name = name;
-        this.dexcription = dexcription;
+        this.description = dexcription;
         this.size = size;
         this.numOfBeds = numOfBeds;
         this.capacity = capacity;
@@ -77,12 +81,12 @@ public class RoomType implements Serializable {
         this.name = name;
     }
 
-    public String getDexcription() {
-        return dexcription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDexcription(String dexcription) {
-        this.dexcription = dexcription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public BigDecimal getSize() {
@@ -135,10 +139,6 @@ public class RoomType implements Serializable {
     
     public Long getRoomTypeId() {
         return roomTypeId;
-    }
-
-    public void setRoomTypeId(Long roomTypeId) {
-        this.roomTypeId = roomTypeId;
     }
 
     @Override

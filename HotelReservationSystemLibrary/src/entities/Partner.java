@@ -5,7 +5,8 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +77,6 @@ public class Partner implements Serializable {
 
     public Long getPartnerId() {
         return partnerId;
-    }
-
-    public void setPartnerId(Long partnerId) {
-        this.partnerId = partnerId;
     }
 
     @Override

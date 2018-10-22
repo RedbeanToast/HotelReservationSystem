@@ -5,7 +5,9 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Future;
 import enumerations.RateTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -48,14 +50,12 @@ public class RoomRate implements Serializable {
     
     @ManyToOne
     private RoomType roomType;
-    @OneToMany(mappedBy = "roomRate")
-    private List<Room> rooms = new ArrayList<Room>();
 
     public RoomRate() {
         
     }
 
-    public RoomRate(RateTypeEnum rateType, BigDecimal ratePerNight, Date validityPeriodStart, Date validityPeriodEnd, Boolean enabled, RoomType roomType, List<Room> rooms) {
+    public RoomRate(RateTypeEnum rateType, BigDecimal ratePerNight, Date validityPeriodStart, Date validityPeriodEnd, Boolean enabled, RoomType roomType) {
         
         this();
         
@@ -65,7 +65,6 @@ public class RoomRate implements Serializable {
         this.validityPeriodEnd = validityPeriodEnd;
         this.enabled = enabled;
         this.roomType = roomType;
-        this.rooms = rooms;
     }
     
     public RateTypeEnum getRateType() {
@@ -116,20 +115,8 @@ public class RoomRate implements Serializable {
         this.roomType = roomType;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
-    }
-
     public Long getRateId() {
         return rateId;
-    }
-
-    public void setRateId(Long rateId) {
-        this.rateId = rateId;
     }
 
     @Override

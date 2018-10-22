@@ -5,7 +5,6 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
 import enumerations.JobRoleEnum;
 import java.io.Serializable;
 import javax.persistence.Column;
@@ -16,6 +15,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import static javax.swing.text.StyleConstants.Size;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -99,15 +100,9 @@ public class Employee implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-    
-    
 
     public Long getEmployeeId() {
         return employeeId;
-    }
-
-    public void setEmployeeId(Long employeeId) {
-        this.employeeId = employeeId;
     }
 
     @Override

@@ -23,8 +23,8 @@ public class OnlineHoRSReservation extends Reservation {
     @ManyToOne
     private Guest guest;
 
-    public OnlineHoRSReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, Guest guest) {
-        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room);
+    public OnlineHoRSReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, Guest guest, RoomRate roomRate) {
+        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room, roomRate);
         this.guest = guest;
     }
 

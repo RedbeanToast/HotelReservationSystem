@@ -5,7 +5,8 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -35,8 +36,8 @@ public class WalkInReservation extends Reservation {
     public WalkInReservation() {
     }
 
-    public WalkInReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room) {
-        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room);
+    public WalkInReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, RoomRate roomRate) {
+        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room, roomRate);
         this.guestFirstName = guestFirstName;
         this.guestLastName = guestLastName;
         this.identificationNumber = identificationNumber;

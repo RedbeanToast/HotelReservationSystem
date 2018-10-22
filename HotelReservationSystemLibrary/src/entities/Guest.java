@@ -5,7 +5,8 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -124,11 +125,7 @@ public class Guest implements Serializable {
     public Long getGuestId() {
         return guestId;
     }
-
-    public void setGuestId(Long guestId) {
-        this.guestId = guestId;
-    }
-
+    
     @Override
     public int hashCode() {
         int hash = 0;

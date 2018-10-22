@@ -5,7 +5,9 @@
  */
 package entities;
 
-import com.sun.istack.internal.NotNull;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Future;
 import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -18,6 +20,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -50,12 +53,14 @@ public abstract class Reservation implements Serializable {
     
     @ManyToOne
     protected Room room;
+    @ManyToOne
+    protected RoomRate roomRate;
 
     public Reservation() {
         
     }
 
-    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room) {
+    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, RoomRate roomRate) {
         
         this();
         
@@ -66,6 +71,7 @@ public abstract class Reservation implements Serializable {
         this.status = status;
         this.isUpgraded = isUpgraded;
         this.room = room;
+        this.roomRate = roomRate;
     } 
 
     public BigDecimal getAmount() {
@@ -123,13 +129,17 @@ public abstract class Reservation implements Serializable {
     public void setRoom(Room room) {
         this.room = room;
     }
+
+    public RoomRate getRoomRate() {
+        return roomRate;
+    }
+
+    public void setRoomRate(RoomRate roomRate) {
+        this.roomRate = roomRate;
+    }
     
     public Long getReservationId() {
         return reservationId;
-    }
-
-    public void setReservationId(Long reservationId) {
-        this.reservationId = reservationId;
     }
 
     @Override
