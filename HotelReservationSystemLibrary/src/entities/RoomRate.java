@@ -1,0 +1,160 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package entities;
+
+import com.sun.istack.internal.NotNull;
+import enumerations.RateTypeEnum;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+/**
+ *
+ * @author CaiYuqian
+ */
+@Entity
+public class RoomRate implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long rateId;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private RateTypeEnum rateType;
+    @NotNull
+    @Digits(integer=4, fraction=2)
+    private BigDecimal ratePerNight;
+    @NotNull
+    private Date validityPeriodStart;
+    @NotNull
+    @Future
+    private Date validityPeriodEnd;
+    @NotNull
+    private Boolean enabled;
+    
+    @ManyToOne
+    private RoomType roomType;
+    @OneToMany(mappedBy = "roomRate")
+    private List<Room> rooms = new ArrayList<Room>();
+
+    public RoomRate() {
+        
+    }
+
+    public RoomRate(RateTypeEnum rateType, BigDecimal ratePerNight, Date validityPeriodStart, Date validityPeriodEnd, Boolean enabled, RoomType roomType, List<Room> rooms) {
+        
+        this();
+        
+        this.rateType = rateType;
+        this.ratePerNight = ratePerNight;
+        this.validityPeriodStart = validityPeriodStart;
+        this.validityPeriodEnd = validityPeriodEnd;
+        this.enabled = enabled;
+        this.roomType = roomType;
+        this.rooms = rooms;
+    }
+    
+    public RateTypeEnum getRateType() {
+        return rateType;
+    }
+
+    public void setRateType(RateTypeEnum rateType) {
+        this.rateType = rateType;
+    }
+
+    public BigDecimal getRatePerNight() {
+        return ratePerNight;
+    }
+
+    public void setRatePerNight(BigDecimal ratePerNight) {
+        this.ratePerNight = ratePerNight;
+    }
+
+    public Date getValidityPeriodStart() {
+        return validityPeriodStart;
+    }
+
+    public void setValidityPeriodStart(Date validityPeriodStart) {
+        this.validityPeriodStart = validityPeriodStart;
+    }
+
+    public Date getValidityPeriodEnd() {
+        return validityPeriodEnd;
+    }
+
+    public void setValidityPeriodEnd(Date validityPeriodEnd) {
+        this.validityPeriodEnd = validityPeriodEnd;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public void setRoomType(RoomType roomType) {
+        this.roomType = roomType;
+    }
+
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    public Long getRateId() {
+        return rateId;
+    }
+
+    public void setRateId(Long rateId) {
+        this.rateId = rateId;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 0;
+        hash += (rateId != null ? rateId.hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        // TODO: Warning - this method won't work in the case the rateId fields are not set
+        if (!(object instanceof RoomRate)) {
+            return false;
+        }
+        RoomRate other = (RoomRate) object;
+        if ((this.rateId == null && other.rateId != null) || (this.rateId != null && !this.rateId.equals(other.rateId))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "entities.RoomRate[ id=" + rateId + " ]";
+    }
+    
+}
