@@ -9,10 +9,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import static javax.swing.text.StyleConstants.Size;
 
 /**
  *
@@ -41,8 +40,8 @@ public class OnlinePartnerReservation extends Reservation {
         
     }
 
-    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, RoomRate roomRate, Partner partner) {
-        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room, roomRate);
+    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Boolean isUpgraded, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
+        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, intendedRoomType, roomRate);
         this.guestFirstName = guestFirstName;
         this.guestLastName = guestLastName;
         this.identificationNumber = identificationNumber;

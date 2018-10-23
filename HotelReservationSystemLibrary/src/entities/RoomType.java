@@ -54,13 +54,15 @@ public class RoomType implements Serializable {
     private Boolean enabled;
     
     @OneToMany(mappedBy = "roomType")
-    private List<Room> rooms = new ArrayList<>();
+    private List<Room> rooms = new ArrayList<Room>();
+    @OneToMany(mappedBy = "roomType")
+    private List<Reservation> allocatedReservations = new ArrayList<Reservation>();
 
     public RoomType() {
         
     }
 
-    public RoomType(String name, String dexcription, BigDecimal size, Integer numOfBeds, Integer capacity, Boolean enabled, List<Room> rooms) {
+    public RoomType(String name, String dexcription, BigDecimal size, Integer numOfBeds, Integer capacity) {
         
         this();
         
@@ -69,8 +71,7 @@ public class RoomType implements Serializable {
         this.size = size;
         this.numOfBeds = numOfBeds;
         this.capacity = capacity;
-        this.enabled = enabled;
-        this.rooms = rooms;
+        this.enabled = true;
     }
 
     public String getName() {
@@ -135,6 +136,14 @@ public class RoomType implements Serializable {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    public List<Reservation> getAllocatedReservations() {
+        return allocatedReservations;
+    }
+
+    public void setAllocatedReservations(List<Reservation> allocatedReservations) {
+        this.allocatedReservations = allocatedReservations;
     }
     
     public Long getRoomTypeId() {

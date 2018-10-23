@@ -49,6 +49,13 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
         }
     }
     
+    public List<RoomType> retrieveRoomTypesByCapacity(Integer capacityRequired) {
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = TRUE AND rt.capacity >= :inCapacityRequired BY rt.name");
+        query.setParameter("inCapacityRequired", capacityRequired);
+        List<RoomType> roomTypes = (List<RoomType>)query.getResultList();
+        return roomTypes;
+    }
+    
     public List<RoomType> retrieveAllRoomTypes() {
         Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.enabled = TRUE ORDER BY rt.name");
         List<RoomType> roomTypes = (List<RoomType>)query.getResultList();

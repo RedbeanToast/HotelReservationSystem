@@ -3,13 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package enumerations;
+package ejb.session.stateless;
 
-public enum ReservationStatusEnum {
-    SUCCESS,
-    FAILED,
-    PENDING,
-    ALLOCATED,
-    COMPLETED,
-    CANCELLED
+import javax.ejb.Local;
+
+/**
+ *
+ * @author CaiYuqian
+ */
+@Local
+public interface ReservationControllerLocal {
+    
 }

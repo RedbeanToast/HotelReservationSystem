@@ -30,10 +30,10 @@ import static javax.swing.text.StyleConstants.Size;
 public class Room implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
+    protected Long roomId;
     @NotNull
     @Size(min=4, max=4)
     private Integer roomNumber;
@@ -42,12 +42,10 @@ public class Room implements Serializable {
     private RoomStatusEnum roomStatus;
     @NotNull
     private Boolean enabled;
+    private Reservation currentOccupancy;
     
     @ManyToOne
     private RoomType roomType;
-    @OneToMany(mappedBy = "room")
-    private List<Reservation> reservations = new ArrayList<Reservation>();
-    private Reservation currentOccupancy;
 
     public Room() {
         
@@ -61,10 +59,6 @@ public class Room implements Serializable {
         this.roomStatus = roomStatus;
         this.enabled = enabled;
         this.roomType = roomType;
-    }
-
-    public Long getRoomId() {
-        return roomId;
     }
 
     public Integer getRoomNumber() {
@@ -99,14 +93,6 @@ public class Room implements Serializable {
         this.roomType = roomType;
     }
 
-    public List<Reservation> getReservations() {
-        return reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
     public Reservation getCurrentOccupancy() {
         return currentOccupancy;
     }
@@ -115,10 +101,14 @@ public class Room implements Serializable {
         this.currentOccupancy = currentOccupancy;
     }
 
+    public Long getRoomId() {
+        return roomId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (roomNumber != null ? roomNumber.hashCode() : 0);
+        hash += (roomId != null ? roomId.hashCode() : 0);
         return hash;
     }
 
@@ -129,7 +119,7 @@ public class Room implements Serializable {
             return false;
         }
         Room other = (Room) object;
-        if ((this.roomNumber == null && other.roomNumber != null) || (this.roomNumber != null && !this.roomNumber.equals(other.roomNumber))) {
+        if ((this.roomId == null && other.roomId != null) || (this.roomId != null && !this.roomId.equals(other.roomId))) {
             return false;
         }
         return true;
@@ -137,7 +127,7 @@ public class Room implements Serializable {
 
     @Override
     public String toString() {
-        return "entities.Room[ id=" + roomNumber + " ]";
+        return "entities.Room[ id=" + roomId + " ]";
     }
     
 }

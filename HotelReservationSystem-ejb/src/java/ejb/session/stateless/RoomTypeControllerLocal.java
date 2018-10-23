@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entities.RoomType;
 import exceptions.RoomTypeNotFoundException;
+import java.util.List;
 import javax.ejb.Local;
 import javax.validation.constraints.NotNull;
 
@@ -16,4 +17,5 @@ import javax.validation.constraints.NotNull;
  */
 public interface RoomTypeControllerLocal {
     RoomType retrieveRoomTypeByName(@NotNull String name) throws RoomTypeNotFoundException;
+    List<RoomType> retrieveRoomTypesByCapacity(Integer capacityRequired);
 }

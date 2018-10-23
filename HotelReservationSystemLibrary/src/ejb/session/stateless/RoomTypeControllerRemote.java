@@ -19,6 +19,7 @@ import javax.validation.constraints.NotNull;
 public interface RoomTypeControllerRemote {
     RoomType createNewRoomType(@NotNull RoomType roomType);
     RoomType retrieveRoomTypeByName(@NotNull String name) throws RoomTypeNotFoundException;
+    List<RoomType> retrieveRoomTypesByCapacity(Integer capacityRequired);
     List<RoomType> retrieveAllRoomTypes();
     void updateRoomType(@NotNull RoomType roomType);
     void deleteRoomTypeByName(@NotNull String name) throws DeleteRoomTypeFailedException;

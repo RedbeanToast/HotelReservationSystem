@@ -9,9 +9,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Entity;
-import static javax.swing.text.StyleConstants.Size;
 
 /**
  *
@@ -36,8 +35,8 @@ public class WalkInReservation extends Reservation {
     public WalkInReservation() {
     }
 
-    public WalkInReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, RoomRate roomRate) {
-        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, room, roomRate);
+    public WalkInReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Boolean isUpgraded, RoomType intendedRoomType, RoomRate roomRate) {
+        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, intendedRoomType, roomRate);
         this.guestFirstName = guestFirstName;
         this.guestLastName = guestLastName;
         this.identificationNumber = identificationNumber;

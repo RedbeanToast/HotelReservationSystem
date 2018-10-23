@@ -11,9 +11,8 @@ import javax.validation.constraints.Future;
 import enumerations.RateTypeEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -21,7 +20,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 
 /**
  *
@@ -41,10 +39,10 @@ public class RoomRate implements Serializable {
     @Digits(integer=4, fraction=2)
     private BigDecimal ratePerNight;
     @NotNull
-    private Date validityPeriodStart;
+    private Calendar validityPeriodStart;
     @NotNull
     @Future
-    private Date validityPeriodEnd;
+    private Calendar validityPeriodEnd;
     @NotNull
     private Boolean enabled;
     
@@ -55,7 +53,7 @@ public class RoomRate implements Serializable {
         
     }
 
-    public RoomRate(RateTypeEnum rateType, BigDecimal ratePerNight, Date validityPeriodStart, Date validityPeriodEnd, Boolean enabled, RoomType roomType) {
+    public RoomRate(RateTypeEnum rateType, BigDecimal ratePerNight, Calendar validityPeriodStart, Calendar validityPeriodEnd, Boolean enabled, RoomType roomType) {
         
         this();
         
@@ -83,19 +81,19 @@ public class RoomRate implements Serializable {
         this.ratePerNight = ratePerNight;
     }
 
-    public Date getValidityPeriodStart() {
+    public Calendar getValidityPeriodStart() {
         return validityPeriodStart;
     }
 
-    public void setValidityPeriodStart(Date validityPeriodStart) {
+    public void setValidityPeriodStart(Calendar validityPeriodStart) {
         this.validityPeriodStart = validityPeriodStart;
     }
 
-    public Date getValidityPeriodEnd() {
+    public Calendar getValidityPeriodEnd() {
         return validityPeriodEnd;
     }
 
-    public void setValidityPeriodEnd(Date validityPeriodEnd) {
+    public void setValidityPeriodEnd(Calendar validityPeriodEnd) {
         this.validityPeriodEnd = validityPeriodEnd;
     }
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.Future;
 import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,30 +41,32 @@ public abstract class Reservation implements Serializable {
     @NotNull
     @Future
     @Column(name = "checkIn", columnDefinition="DATETIME")
-    protected Date checkIn;
+    protected Calendar checkIn;
     @NotNull
     @Future
     @Column(name = "checkOut", columnDefinition="DATETIME")
-    protected Date checkOut;
+    protected Calendar checkOut;
     @NotNull
     @Column(name = "madeDate", columnDefinition="DATETIME")
-    protected Date madeDate;
+    protected Calendar madeDate;
     @NotNull
     @Enumerated(EnumType.STRING)
     protected ReservationStatusEnum status;
     @NotNull
     protected Boolean isUpgraded;
-    
-    @ManyToOne
-    protected Room room;
+    protected Room roomAllocated;
+    protected RoomType intendedRoomType;
+
     @ManyToOne
     protected RoomRate roomRate;
+    @ManyToOne
+    protected RoomType allocatedRoomType;
 
     public Reservation() {
         
     }
 
-    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Boolean isUpgraded, Room room, RoomRate roomRate) {
+    public Reservation(BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Boolean isUpgraded, RoomType intendedRoomType, RoomRate roomRate) {
         
         this();
         
@@ -74,7 +76,7 @@ public abstract class Reservation implements Serializable {
         this.madeDate = madeDate;
         this.status = status;
         this.isUpgraded = isUpgraded;
-        this.room = room;
+        this.intendedRoomType = intendedRoomType;
         this.roomRate = roomRate;
     } 
 
@@ -86,27 +88,27 @@ public abstract class Reservation implements Serializable {
         this.amount = amount;
     }
 
-    public Date getCheckIn() {
+    public Calendar getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(Calendar checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Date getCheckOut() {
+    public Calendar getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(Calendar checkOut) {
         this.checkOut = checkOut;
     }
 
-    public Date getMadeDate() {
+    public Calendar getMadeDate() {
         return madeDate;
     }
 
-    public void setMadeDate(Date madeDate) {
+    public void setMadeDate(Calendar madeDate) {
         this.madeDate = madeDate;
     }
 
@@ -126,20 +128,28 @@ public abstract class Reservation implements Serializable {
         this.isUpgraded = isUpgraded;
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room room) {
-        this.room = room;
-    }
-
     public RoomRate getRoomRate() {
         return roomRate;
     }
 
     public void setRoomRate(RoomRate roomRate) {
         this.roomRate = roomRate;
+    }
+
+    public Room getRoomAllocated() {
+        return roomAllocated;
+    }
+
+    public void setRoomAllocated(Room roomAllocated) {
+        this.roomAllocated = roomAllocated;
+    }
+
+    public RoomType getAllocatedRoomType() {
+        return allocatedRoomType;
+    }
+
+    public void setAllocatedRoomType(RoomType allocatedRoomType) {
+        this.allocatedRoomType = allocatedRoomType;
     }
     
     public Long getReservationId() {
