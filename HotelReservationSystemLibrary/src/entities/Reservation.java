@@ -53,7 +53,7 @@ public abstract class Reservation implements Serializable {
     @Enumerated(EnumType.STRING)
     protected ReservationStatusEnum status;
     @NotNull
-    protected Boolean isUpgraded;
+    protected Boolean isUpgraded = false;
     protected Room roomAllocated;
     protected RoomType intendedRoomType;
 
@@ -66,7 +66,7 @@ public abstract class Reservation implements Serializable {
         
     }
 
-    public Reservation(BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Boolean isUpgraded, RoomType intendedRoomType, RoomRate roomRate) {
+    public Reservation(BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate) {
         
         this();
         
@@ -75,7 +75,6 @@ public abstract class Reservation implements Serializable {
         this.checkOut = checkOut;
         this.madeDate = madeDate;
         this.status = status;
-        this.isUpgraded = isUpgraded;
         this.intendedRoomType = intendedRoomType;
         this.roomRate = roomRate;
     } 

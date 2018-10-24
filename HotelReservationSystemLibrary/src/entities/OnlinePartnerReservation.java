@@ -40,8 +40,8 @@ public class OnlinePartnerReservation extends Reservation {
         
     }
 
-    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Boolean isUpgraded, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
-        super(amount, checkIn, checkOut, madeDate, status, isUpgraded, intendedRoomType, roomRate);
+    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
+        super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
         this.guestFirstName = guestFirstName;
         this.guestLastName = guestLastName;
         this.identificationNumber = identificationNumber;

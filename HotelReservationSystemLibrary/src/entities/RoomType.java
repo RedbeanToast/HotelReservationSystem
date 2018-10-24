@@ -55,8 +55,11 @@ public class RoomType implements Serializable {
     
     @OneToMany(mappedBy = "roomType")
     private List<Room> rooms = new ArrayList<Room>();
+    // SUCCESSFUL reservations are the ones that are able to be filled by an inventory room when the customer 
+    // is making a reservation, but it is not currently be allocated to a certain room until on that date itself 2 AM
+    // the status could be changed to ALLOCATED or FAILED
     @OneToMany(mappedBy = "roomType")
-    private List<Reservation> allocatedReservations = new ArrayList<Reservation>();
+    private List<Reservation> successfulReservations = new ArrayList<Reservation>();
 
     public RoomType() {
         
@@ -138,12 +141,12 @@ public class RoomType implements Serializable {
         this.rooms = rooms;
     }
 
-    public List<Reservation> getAllocatedReservations() {
-        return allocatedReservations;
+    public List<Reservation> getSuccessfulReservations() {
+        return successfulReservations;
     }
 
-    public void setAllocatedReservations(List<Reservation> allocatedReservations) {
-        this.allocatedReservations = allocatedReservations;
+    public void setSuccessfulReservations(List<Reservation> successfulReservations) {
+        this.successfulReservations = successfulReservations;
     }
     
     public Long getRoomTypeId() {

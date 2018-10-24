@@ -98,7 +98,7 @@ public class RoomRateController implements RoomRateControllerRemote, RoomRateCon
             RoomRate roomRate = retrieveRoomRateById(rateId);
             // check whether the room rate is currently in use
             // assumption: a room rate is in use when its applied room type has allocated reservation(s)
-            if(roomRate.getRoomType().getAllocatedReservations().size() > 0){
+            if(roomRate.getRoomType().getSuccessfulReservations().size() > 0){
                 throw new DeleteRoomRateFailedException("Delete room rate failed: the room rate is currently associated with allocated reservation(s)!");
             } else {
                 roomRate.setEnabled(false);

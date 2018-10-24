@@ -5,13 +5,15 @@
  */
 package ejb.session.stateless;
 
+import entities.Reservation;
+import exceptions.ReservationNotFoundException;
 import javax.ejb.Local;
 
 /**
  *
  * @author CaiYuqian
  */
-@Local
+
 public interface ReservationControllerLocal {
-    
+    Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
 }
