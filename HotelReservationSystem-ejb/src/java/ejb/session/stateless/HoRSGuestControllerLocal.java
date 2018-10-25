@@ -5,8 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.Room;
-import exceptions.RoomNotFoundException;
 import javax.ejb.Local;
 
 /**
@@ -14,6 +12,6 @@ import javax.ejb.Local;
  * @author CaiYuqian
  */
 
-public interface RoomControllerLocal {
-    Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
+public interface HoRSGuestControllerLocal {
+    
 }

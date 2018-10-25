@@ -11,6 +11,7 @@ import entities.RoomType;
 import enumerations.RoomStatusEnum;
 import exceptions.CreateNewRoomFailedException;
 import exceptions.DeleteRoomFailedException;
+import exceptions.RoomNotFoundException;
 import exceptions.RoomTypeNotFoundException;
 import java.util.List;
 import javax.ejb.EJB;
@@ -48,6 +49,19 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
             return room;
         } catch (RoomTypeNotFoundException ex) {
             throw new CreateNewRoomFailedException("New room creation failed: " + ex.getMessage());
+        }
+    }
+    
+    public Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException {
+        Query query = em.createQuery("SELECT r FROM Room WHERE r.roomNumber = :inRoomNumber AND ENABLED = TRUE");
+        query.setParameter("inRoomNumber", roomNumber);
+        try{
+            Room room = (Room)query.getSingleResult();
+            room.getCurrentOccupancy();
+            room.getRoomType();
+            return room;
+        } catch(NoResultException | NonUniqueResultException ex) {
+            throw new RoomNotFoundException("Room with room number " + roomNumber + " does not exist or is not in use!");
         }
     }
 

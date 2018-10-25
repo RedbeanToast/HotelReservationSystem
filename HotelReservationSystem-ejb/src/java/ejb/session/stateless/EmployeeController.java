@@ -37,8 +37,7 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
             return employee;
         } else {
             throw new InvalidLoginCredentialsException("Wrong password!");
-        }
-        
+        }      
     }
    
     public Employee createNewEmployee(@NotNull Employee employee) {

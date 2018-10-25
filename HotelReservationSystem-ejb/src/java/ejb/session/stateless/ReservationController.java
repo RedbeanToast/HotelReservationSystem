@@ -8,12 +8,14 @@ package ejb.session.stateless;
 import entities.OnlineHoRSReservation;
 import entities.OnlinePartnerReservation;
 import entities.Reservation;
+import entities.Room;
 import entities.RoomRate;
 import entities.RoomType;
 import entities.WalkInReservation;
 import enumerations.RoomStatusEnum;
-import exceptions.CheckinFailedException;
+import exceptions.CheckoutFailedException;
 import exceptions.ReservationNotFoundException;
+import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
 import exceptions.SearchAvailableRoomsFailedException;
@@ -46,6 +48,7 @@ public class ReservationController implements ReservationControllerRemote, Reser
     @EJB
     private RoomTypeControllerLocal roomTypeControllerLocal;
     private RoomRateControllerLocal roomRateControllerLocal;
+    private RoomControllerLocal roomControllerLocal;
 
     public RoomSearchResult walkinSearchRoomsAvailableByRoomType(@NotNull Calendar checkInDate, @NotNull Calendar checkOutDate, @NotNull String roomTypeName) throws SearchAvailableRoomsFailedException {
         if (checkInDate.after(checkOutDate)) {
@@ -188,11 +191,5 @@ public class ReservationController implements ReservationControllerRemote, Reser
         return validReservations;
     }
     
-    // pre-condition: this method can only be called 
-    public void checkIn(Long reservationId) {
-        Reservation reservation = em.find(Reservation.class, reservationId);
-        if(reservation != null){
-            
-        }
-    }
+
 }
