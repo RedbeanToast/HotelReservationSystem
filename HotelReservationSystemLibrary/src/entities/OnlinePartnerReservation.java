@@ -5,11 +5,10 @@
  */
 package entities;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -21,17 +20,6 @@ import javax.persistence.ManyToOne;
 public class OnlinePartnerReservation extends Reservation {
 
     private static final long serialVersionUID = 1L;
-    @NotNull
-    @Size(min=1, max=16)
-    private String guestFirstName;
-    @Size(min=1, max=16)
-    private String guestLastName;
-    @NotNull
-    @Size(min=1, max=20)
-    private String identificationNumber;
-    @NotNull
-    @Size(min=6, max=20)
-    private String phoneNumber;
     
     @ManyToOne
     private Partner partner;
@@ -40,45 +28,9 @@ public class OnlinePartnerReservation extends Reservation {
         
     }
 
-    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
+    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
         super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
-        this.guestFirstName = guestFirstName;
-        this.guestLastName = guestLastName;
-        this.identificationNumber = identificationNumber;
-        this.phoneNumber = phoneNumber;
         this.partner = partner;
-    }
-
-    public String getGuestFirstName() {
-        return guestFirstName;
-    }
-
-    public void setGuestFirstName(String guestFirstName) {
-        this.guestFirstName = guestFirstName;
-    }
-
-    public String getGuestLastName() {
-        return guestLastName;
-    }
-
-    public void setGuestLastName(String guestLastName) {
-        this.guestLastName = guestLastName;
-    }
-
-    public String getIdentificationNumber() {
-        return identificationNumber;
-    }
-
-    public void setIdentificationNumber(String identificationNumber) {
-        this.identificationNumber = identificationNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
     }
 
     public Long getReservationId() {

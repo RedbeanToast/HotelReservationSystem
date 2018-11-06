@@ -16,7 +16,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import static javax.swing.text.StyleConstants.Size;
 
 /**
  *
@@ -28,11 +27,7 @@ public class Guest implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long guestId;
-    @NotNull
-    @Size(min=1, max=64)
-    @Column(unique = true)
-    private String email;
+    protected Long guestId;
     @NotNull
     @Size(min=1, max=16)
     private String firstName;
@@ -46,9 +41,6 @@ public class Guest implements Serializable {
     @Size(min=1, max=20)
     @Column(unique = true)
     private String identificationNumber;
-    @NotNull
-    @Size(min=6, max=20)
-    private String password;
     
     @OneToMany
     private List<OnlineHoRSReservation> onlineHoRSReservations = new ArrayList<OnlineHoRSReservation>();
@@ -57,21 +49,11 @@ public class Guest implements Serializable {
         
     }
 
-    public Guest(String email, String firstName, String lastName, String phoneNumber, String identificationNumber, String password) {
-        this.email = email;
+    public Guest(String firstName, String lastName, String phoneNumber, String identificationNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.identificationNumber = identificationNumber;
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getFirstName() {
@@ -104,14 +86,6 @@ public class Guest implements Serializable {
 
     public void setIdentificationNumber(String identificationNumber) {
         this.identificationNumber = identificationNumber;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public List<OnlineHoRSReservation> getOnlineHoRSReservations() {

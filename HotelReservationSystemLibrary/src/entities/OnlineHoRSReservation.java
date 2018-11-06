@@ -8,6 +8,7 @@ package entities;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -23,7 +24,7 @@ public class OnlineHoRSReservation extends Reservation {
     @ManyToOne
     private Guest guest;
 
-    public OnlineHoRSReservation(BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, Guest guest, RoomType intendedRoomType, RoomRate roomRate) {
+    public OnlineHoRSReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Guest guest, RoomType intendedRoomType, RoomRate roomRate) {
         super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
         this.guest = guest;
     }

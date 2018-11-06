@@ -5,9 +5,11 @@
  */
 package enumerations;
 
-public enum RateTypeEnum {
-    PUBLISHED,
-    PEAK,
-    NORMAL,
-    PROMOTION
+/**
+ *
+ * @author CaiYuqian
+ */
+public enum AllocationExceptionTypeEnum {
+    UPGRADED,
+    UPGRADEFAILED;
 }

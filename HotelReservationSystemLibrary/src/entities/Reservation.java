@@ -12,6 +12,7 @@ import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -41,14 +42,14 @@ public abstract class Reservation implements Serializable {
     @NotNull
     @Future
     @Column(name = "checkIn", columnDefinition="DATETIME")
-    protected Calendar checkIn;
+    protected Date checkIn;
     @NotNull
     @Future
     @Column(name = "checkOut", columnDefinition="DATETIME")
-    protected Calendar checkOut;
+    protected Date checkOut;
     @NotNull
     @Column(name = "madeDate", columnDefinition="DATETIME")
-    protected Calendar madeDate;
+    protected Date madeDate;
     @NotNull
     @Enumerated(EnumType.STRING)
     protected ReservationStatusEnum status;
@@ -66,7 +67,7 @@ public abstract class Reservation implements Serializable {
         
     }
 
-    public Reservation(BigDecimal amount, Calendar checkIn, Calendar checkOut, Calendar madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate) {
+    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate) {
         
         this();
         
@@ -87,27 +88,27 @@ public abstract class Reservation implements Serializable {
         this.amount = amount;
     }
 
-    public Calendar getCheckIn() {
+    public Date getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Calendar checkIn) {
+    public void setCheckIn(Date checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Calendar getCheckOut() {
+    public Date getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Calendar checkOut) {
+    public void setCheckOut(Date checkOut) {
         this.checkOut = checkOut;
     }
 
-    public Calendar getMadeDate() {
+    public Date getMadeDate() {
         return madeDate;
     }
 
-    public void setMadeDate(Calendar madeDate) {
+    public void setMadeDate(Date madeDate) {
         this.madeDate = madeDate;
     }
 
