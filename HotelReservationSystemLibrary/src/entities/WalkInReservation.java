@@ -6,12 +6,14 @@
 package entities;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 /**
  *
@@ -22,71 +24,40 @@ public class WalkInReservation extends Reservation {
 
     private static final long serialVersionUID = 1L;
     @NotNull
-    @Size(min=1, max=16)
-    private String guestFirstName;
-    @Size(min=1, max=16)
-    private String guestLastName;
+    @ManyToOne(optional=false)
+    @JoinColumn(nullable=false)
+    private Employee employee;
     @NotNull
-    @Size(min=1, max=20)
-    private String identificationNumber;
-    @NotNull
-    @Size(min=6, max=20)
-    private String phoneNumber;
-
+    @ManyToOne(optional=false)
+    @JoinColumn(nullable=false)
+    private Guest guest;
+    
     public WalkInReservation() {
+        
     }
 
-    public WalkInReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate) {
-        super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
-        this.guestFirstName = guestFirstName;
-        this.guestLastName = guestLastName;
-        this.identificationNumber = identificationNumber;
-        this.phoneNumber = phoneNumber;
-    }
-    
-
-    public String getGuestFirstName() {
-        return guestFirstName;
+    public WalkInReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Employee employee, Guest guest) {
+        super(amount, checkIn, checkOut, madeDate, status, reservationLineItems);
+        this.employee = employee;
+        this.guest = guest;
     }
 
-    public void setGuestFirstName(String guestFirstName) {
-        this.guestFirstName = guestFirstName;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public String getGuestLastName() {
-        return guestLastName;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 
-    public void setGuestLastName(String guestLastName) {
-        this.guestLastName = guestLastName;
+    public Guest getGuest() {
+        return guest;
     }
 
-    public String getIdentificationNumber() {
-        return identificationNumber;
+    public void setGuest(Guest guest) {
+        this.guest = guest;
     }
-
-    public void setIdentificationNumber(String identificationNumber) {
-        this.identificationNumber = identificationNumber;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Long getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(Long reservationId) {
-        this.reservationId = reservationId;
-    }
-
-    
-    
+ 
     @Override
     public int hashCode() {
         int hash = 0;

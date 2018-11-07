@@ -42,8 +42,10 @@ public class Guest implements Serializable {
     @Column(unique = true)
     private String identificationNumber;
     
-    @OneToMany
+    @OneToMany(mappedBy="guest")
     private List<OnlineHoRSReservation> onlineHoRSReservations = new ArrayList<OnlineHoRSReservation>();
+    @OneToMany(mappedBy="guest")
+    private List<WalkInReservation> walkInReservations = new ArrayList<WalkInReservation>();
 
     public Guest() {
         
@@ -96,8 +98,20 @@ public class Guest implements Serializable {
         this.onlineHoRSReservations = onlineHoRSReservations;
     }
 
+    public List<WalkInReservation> getWalkInReservations() {
+        return walkInReservations;
+    }
+
+    public void setWalkInReservations(List<WalkInReservation> walkInReservations) {
+        this.walkInReservations = walkInReservations;
+    }
+
     public Long getGuestId() {
         return guestId;
+    }
+
+    public void setGuestId(Long guestId) {
+        this.guestId = guestId;
     }
     
     @Override

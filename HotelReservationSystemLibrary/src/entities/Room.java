@@ -11,16 +11,15 @@ import enumerations.RoomStatusEnum;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import static javax.swing.text.StyleConstants.Size;
 
 /**
  *
@@ -44,8 +43,12 @@ public class Room implements Serializable {
     private Boolean enabled;
     private Reservation currentOccupancy;
     
-    @ManyToOne
+    @NotNull
+    @JoinColumn(nullable=false)
+    @ManyToOne(optional=false)
     private RoomType roomType;
+    @ManyToMany(mappedBy="rooms")
+    private List<RoomNight> roomNights = new ArrayList<RoomNight>();
 
     public Room() {
         
@@ -101,8 +104,20 @@ public class Room implements Serializable {
         this.currentOccupancy = currentOccupancy;
     }
 
+    public List<RoomNight> getRoomNights() {
+        return roomNights;
+    }
+
+    public void setRoomNights(List<RoomNight> roomNights) {
+        this.roomNights = roomNights;
+    }
+
     public Long getRoomId() {
         return roomId;
+    }
+
+    public void setRoomId(Long roomId) {
+        this.roomId = roomId;
     }
 
     @Override

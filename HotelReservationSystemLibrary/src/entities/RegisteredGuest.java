@@ -8,8 +8,11 @@ package entities;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -26,6 +29,9 @@ public class RegisteredGuest extends Guest implements Serializable {
     @NotNull
     @Size(min=6, max=25)
     private String password;
+    
+    @OneToMany(mappedBy = "registeredGuest")
+    private List<OnlineHoRSReservation> onlinePartnerReservations = new ArrayList<OnlineHoRSReservation>();
 
     public RegisteredGuest() {
         
@@ -51,6 +57,14 @@ public class RegisteredGuest extends Guest implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public List<OnlineHoRSReservation> getOnlinePartnerReservations() {
+        return onlinePartnerReservations;
+    }
+
+    public void setOnlinePartnerReservations(List<OnlineHoRSReservation> onlinePartnerReservations) {
+        this.onlinePartnerReservations = onlinePartnerReservations;
     }
 
     @Override

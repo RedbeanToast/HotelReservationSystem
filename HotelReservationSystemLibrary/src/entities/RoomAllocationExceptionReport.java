@@ -13,6 +13,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -29,16 +30,21 @@ public class RoomAllocationExceptionReport implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     private AllocationExceptionTypeEnum exceptionType;
+    
+    @OneToOne(mappedBy="roomAllocationExceptionReport")
+    @NotNull
+    private RoomNight roomNight;
 
     public RoomAllocationExceptionReport() {
         
     }
 
-    public RoomAllocationExceptionReport(AllocationExceptionTypeEnum exceptionType) {
+    public RoomAllocationExceptionReport(AllocationExceptionTypeEnum exceptionType, RoomNight roomNight) {
         
         this();
         
         this.exceptionType = exceptionType;
+        this.roomNight = roomNight;
     }
 
     public AllocationExceptionTypeEnum getExceptionType() {
@@ -47,6 +53,14 @@ public class RoomAllocationExceptionReport implements Serializable {
 
     public void setExceptionType(AllocationExceptionTypeEnum exceptionType) {
         this.exceptionType = exceptionType;
+    }
+
+    public RoomNight getRoomNight() {
+        return roomNight;
+    }
+
+    public void setRoomNight(RoomNight roomNight) {
+        this.roomNight = roomNight;
     }
 
     public Long getReportId() {

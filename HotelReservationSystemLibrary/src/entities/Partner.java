@@ -79,6 +79,10 @@ public class Partner implements Serializable {
         return partnerId;
     }
 
+    public void setPartnerId(Long partnerId) {
+        this.partnerId = partnerId;
+    }
+
     @Override
     public int hashCode() {
         int hash = 0;

@@ -9,6 +9,7 @@ import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
@@ -22,19 +23,19 @@ public class OnlineHoRSReservation extends Reservation {
     private static final long serialVersionUID = 1L;
     
     @ManyToOne
-    private Guest guest;
+    private RegisteredGuest registeredGuest;
 
-    public OnlineHoRSReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Guest guest, RoomType intendedRoomType, RoomRate roomRate) {
-        super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
-        this.guest = guest;
+    public OnlineHoRSReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, Guest guest, List<ReservationLineItem> reservationLineItems, RegisteredGuest registeredGuest) {
+        super(amount, checkIn, checkOut, madeDate, status, reservationLineItems);
+        this.registeredGuest = registeredGuest;
     }
 
     public Guest getGuest() {
-        return guest;
+        return registeredGuest;
     }
 
-    public void setGuest(Guest guest) {
-        this.guest = guest;
+    public void setGuest(RegisteredGuest guest) {
+        this.registeredGuest = guest;
     }
 
     @Override

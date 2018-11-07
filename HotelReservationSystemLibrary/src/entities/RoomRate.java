@@ -25,7 +25,7 @@ public abstract class RoomRate implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rateId;
+    protected Long rateId;
     @NotNull
     @Digits(integer=4, fraction=2)
     private BigDecimal ratePerNight;
@@ -74,6 +74,10 @@ public abstract class RoomRate implements Serializable {
 
     public Long getRateId() {
         return rateId;
+    }
+
+    public void setRateId(Long rateId) {
+        this.rateId = rateId;
     }
 
     @Override

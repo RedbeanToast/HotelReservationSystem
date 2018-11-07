@@ -6,12 +6,18 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -27,16 +33,53 @@ public class ReservationLineItem implements Serializable {
     @NotNull
     @Min(1)
     private Integer numOfRooms;
+    
+    @OneToOne
+    private RoomType intendedRoomType;
+    @NotNull
+    @JoinColumn(nullable=false)
+    @ManyToOne(optional=false)
+    private Reservation reservation;
+    @OneToMany(mappedBy="reservationLineItem")
+    @Size(min=1)
+    private List<RoomNight> roomNights;
 
     public ReservationLineItem() {
     
     }
 
-    public ReservationLineItem(Integer numOfRooms) {
+    public ReservationLineItem(Integer numOfRooms, RoomType intendedRoomType, Reservation reservation, List<RoomNight> roomNights) {
         
         this();
         
         this.numOfRooms = numOfRooms;
+        this.intendedRoomType = intendedRoomType;
+        this.reservation = reservation;
+        this.roomNights = roomNights;
+    }
+
+    public RoomType getIntendedRoomType() {
+        return intendedRoomType;
+    }
+
+    public void setIntendedRoomType(RoomType intendedRoomType) {
+        this.intendedRoomType = intendedRoomType;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public List<RoomNight> getRoomNights() {
+        return roomNights;
+    }
+
+    public void setRoomNights(List<RoomNight> roomNights) {
+        this.roomNights = roomNights;
     }
 
     public Long getReservationLineItemId() {

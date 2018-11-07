@@ -11,8 +11,8 @@ import javax.validation.constraints.Future;
 import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +22,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Size;
 
 /**
  *
@@ -53,21 +54,17 @@ public abstract class Reservation implements Serializable {
     @NotNull
     @Enumerated(EnumType.STRING)
     protected ReservationStatusEnum status;
-    @NotNull
-    protected Boolean isUpgraded = false;
-    protected Room roomAllocated;
-    protected RoomType intendedRoomType;
 
-    @ManyToOne
-    protected RoomRate roomRate;
-    @ManyToOne
-    protected RoomType allocatedRoomType;
+    @NotNull
+    @Size(min=1)
+    @OneToMany(mappedBy="reservation")
+    protected List<ReservationLineItem> reservationLineItems;
 
     public Reservation() {
         
     }
 
-    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate) {
+    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems) {
         
         this();
         
@@ -76,8 +73,8 @@ public abstract class Reservation implements Serializable {
         this.checkOut = checkOut;
         this.madeDate = madeDate;
         this.status = status;
-        this.intendedRoomType = intendedRoomType;
-        this.roomRate = roomRate;
+        this.reservationLineItems = reservationLineItems;
+        
     } 
 
     public BigDecimal getAmount() {
@@ -120,40 +117,20 @@ public abstract class Reservation implements Serializable {
         this.status = status;
     }
 
-    public Boolean getIsUpgraded() {
-        return isUpgraded;
+    public List<ReservationLineItem> getReservationLineItems() {
+        return reservationLineItems;
     }
 
-    public void setIsUpgraded(Boolean isUpgraded) {
-        this.isUpgraded = isUpgraded;
+    public void setReservationLineItems(List<ReservationLineItem> reservationLineItems) {
+        this.reservationLineItems = reservationLineItems;
     }
 
-    public RoomRate getRoomRate() {
-        return roomRate;
-    }
-
-    public void setRoomRate(RoomRate roomRate) {
-        this.roomRate = roomRate;
-    }
-
-    public Room getRoomAllocated() {
-        return roomAllocated;
-    }
-
-    public void setRoomAllocated(Room roomAllocated) {
-        this.roomAllocated = roomAllocated;
-    }
-
-    public RoomType getAllocatedRoomType() {
-        return allocatedRoomType;
-    }
-
-    public void setAllocatedRoomType(RoomType allocatedRoomType) {
-        this.allocatedRoomType = allocatedRoomType;
-    }
-    
     public Long getReservationId() {
         return reservationId;
+    }
+    
+    public void setReservationId(Long reservationId) {
+        this.reservationId = reservationId;
     }
 
     @Override

@@ -7,10 +7,12 @@ package entities;
 
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -21,16 +23,24 @@ public class OnlinePartnerReservation extends Reservation {
 
     private static final long serialVersionUID = 1L;
     
-    @ManyToOne
+    @NotNull
+    @ManyToOne(optional=false)
+    @JoinColumn(nullable=false)
     private Partner partner;
+    @NotNull
+    @ManyToOne(optional=false)
+    @JoinColumn(nullable=false)
+    private Guest guest;
+    
 
     public OnlinePartnerReservation() {
         
     }
 
-    public OnlinePartnerReservation(String guestFirstName, String guestLastName, String identificationNumber, String phoneNumber, BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, RoomType intendedRoomType, RoomRate roomRate, Partner partner) {
-        super(amount, checkIn, checkOut, madeDate, status, intendedRoomType, roomRate);
+    public OnlinePartnerReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Partner partner, Guest guest) {
+        super(amount, checkIn, checkOut, madeDate, status, reservationLineItems);
         this.partner = partner;
+        this.guest = guest;
     }
 
     public Long getReservationId() {
@@ -39,6 +49,14 @@ public class OnlinePartnerReservation extends Reservation {
 
     public void setReservationId(Long reservationId) {
         this.reservationId = reservationId;
+    }
+
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
     }
 
     public Partner getPartner() {
