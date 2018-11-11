@@ -6,10 +6,12 @@
 package ejb.session.stateless;
 
 import entities.RoomRate;
-import exceptions.DeleteRoomRateFailedException;
+import exceptions.DeleteRoomRateException;
 import exceptions.RoomRateNotFoundException;
-import exceptions.UpdateRoomRateFailedException;
+import exceptions.UpdateRoomRateException;
+import java.util.List;
 import javax.ejb.Remote;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -17,8 +19,9 @@ import javax.ejb.Remote;
  */
 
 public interface RoomRateControllerRemote {
-    RoomRate createNewRoomRate(RoomRate roomRate);
-    RoomRate retrieveRoomRateById(Long rateId) throws RoomRateNotFoundException;
-    void updateRoomRateDetails(RoomRate roomRate) throws UpdateRoomRateFailedException;
-    void deleteRoomRate(Long rateId) throws DeleteRoomRateFailedException;
+    RoomRate createNewRoomRate(@NotNull RoomRate roomRate);
+    RoomRate retrieveRoomRateById(@NotNull Long rateId) throws RoomRateNotFoundException;
+    List<RoomRate> retrieveAllRoomRates();
+    void updateRoomRateDetails(RoomRate roomRate) throws UpdateRoomRateException;
+    void deleteRoomRate(Long rateId) throws DeleteRoomRateException;
 }

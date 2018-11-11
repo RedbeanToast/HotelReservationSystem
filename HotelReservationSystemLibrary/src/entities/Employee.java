@@ -33,19 +33,22 @@ public class Employee implements Serializable {
     private Long employeeId;
     @NotNull
     @Size(min=1, max=16)
+    @Column(length=16)
     private String firstName;
     @NotNull
     @Size(min=1, max=16)
+    @Column(length=16)
     private String lastName;
     @NotNull
     @Enumerated(EnumType.STRING)
     private JobRoleEnum jobRole;
     @NotNull
     @Size(min=6, max=20)
-    @Column(unique=true)
+    @Column(unique=true, length=20)
     private String userName;
     @NotNull
     @Size(min=6, max=20)
+    @Column(unique=true, length=20)
     private String password;
     
     @OneToMany(mappedBy="employee")

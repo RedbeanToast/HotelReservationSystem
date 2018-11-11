@@ -5,13 +5,13 @@
  */
 package ejb.session.stateless;
 
-import javax.ejb.Local;
+import javax.ejb.Remote;
 
 /**
  *
  * @author CaiYuqian
  */
-
-public interface HoRSGuestControllerLocal {
+@Remote
+public interface RoomCheckoutControllerRemote {
     
 }

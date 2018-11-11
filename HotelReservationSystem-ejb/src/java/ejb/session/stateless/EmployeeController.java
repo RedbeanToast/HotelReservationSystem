@@ -31,7 +31,10 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
 
-    public Employee login(String userName, String password) throws EmployeeNotFoundException, InvalidLoginCredentialsException {
+    public EmployeeController() {
+    }
+
+    public Employee login(@NotNull String userName, @NotNull String password) throws EmployeeNotFoundException, InvalidLoginCredentialsException {
         Employee employee = retrieveEmployeeByUserName(userName);
         if(employee.getPassword().equals(password)){
             return employee;

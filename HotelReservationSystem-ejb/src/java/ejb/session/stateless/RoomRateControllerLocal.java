@@ -6,8 +6,12 @@
 package ejb.session.stateless;
 
 import entities.RoomRate;
-import exceptions.RoomRateNotFoundException;
-import javax.ejb.Local;
+import entities.RoomType;
+import exceptions.SearchRoomRateException;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -15,5 +19,5 @@ import javax.ejb.Local;
  */
 
 public interface RoomRateControllerLocal {
-    RoomRate retrieveWalkinRoomRateByRoomTypeName(String roomTypeName) throws RoomRateNotFoundException;
+    RoomRate searchPrevailingRoomRate(@NotNull GregorianCalendar date, RoomType roomType, String reservationType) throws SearchRoomRateException;
 }

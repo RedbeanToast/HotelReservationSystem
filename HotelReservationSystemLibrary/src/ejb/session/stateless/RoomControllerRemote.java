@@ -6,9 +6,10 @@
 package ejb.session.stateless;
 
 import entities.Room;
-import exceptions.CreateNewRoomFailedException;
-import exceptions.DeleteRoomFailedException;
+import exceptions.CreateNewRoomException;
+import exceptions.DeleteRoomException;
 import exceptions.RoomNotFoundException;
+import exceptions.UpdateRoomException;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 
@@ -18,9 +19,9 @@ import javax.validation.constraints.NotNull;
  */
 
 public interface RoomControllerRemote {
-    Room createNewRoom(@NotNull Integer roomNumber, @NotNull String roomTypeName) throws CreateNewRoomFailedException;
+    Room createNewRoom(@NotNull Integer roomNumber, @NotNull String roomTypeName) throws CreateNewRoomException;
     Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
     List<Room> retrieveAllRooms();
-    void updateRoom(@NotNull Room room);
-    void deleteRoom(@NotNull Integer roomNumber) throws DeleteRoomFailedException;
+    void updateRoom(@NotNull Room room) throws UpdateRoomException;
+    void deleteRoom(@NotNull Integer roomNumber) throws DeleteRoomException;
 }

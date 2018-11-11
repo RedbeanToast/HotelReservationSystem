@@ -6,6 +6,7 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -34,6 +35,7 @@ public class ReservationLineItem implements Serializable {
     @Min(1)
     private Integer numOfRooms;
     
+    @NotNull
     @OneToOne
     private RoomType intendedRoomType;
     @NotNull
@@ -48,13 +50,12 @@ public class ReservationLineItem implements Serializable {
     
     }
 
-    public ReservationLineItem(Integer numOfRooms, RoomType intendedRoomType, Reservation reservation, List<RoomNight> roomNights) {
+    public ReservationLineItem(Integer numOfRooms, RoomType intendedRoomType, List<RoomNight> roomNights) {
         
         this();
         
         this.numOfRooms = numOfRooms;
         this.intendedRoomType = intendedRoomType;
-        this.reservation = reservation;
         this.roomNights = roomNights;
     }
 

@@ -9,22 +9,22 @@ package exceptions;
  *
  * @author CaiYuqian
  */
-public class CheckinFailedException extends Exception {
+public class PartnerNotFoundException extends Exception {
 
     /**
-     * Creates a new instance of <code>CheckinFailedException</code> without
+     * Creates a new instance of <code>PartnerNotFoundException</code> without
      * detail message.
      */
-    public CheckinFailedException() {
+    public PartnerNotFoundException() {
     }
 
     /**
-     * Constructs an instance of <code>CheckinFailedException</code> with the
+     * Constructs an instance of <code>PartnerNotFoundException</code> with the
      * specified detail message.
      *
      * @param msg the detail message.
      */
-    public CheckinFailedException(String msg) {
+    public PartnerNotFoundException(String msg) {
         super(msg);
     }
 }

@@ -9,13 +9,13 @@ package exceptions;
  *
  * @author CaiYuqian
  */
-public class CheckoutFailedException extends Exception {
+public class CheckoutException extends Exception {
 
     /**
      * Creates a new instance of <code>CheckoutFailedException</code> without
      * detail message.
      */
-    public CheckoutFailedException() {
+    public CheckoutException() {
     }
 
     /**
@@ -24,7 +24,7 @@ public class CheckoutFailedException extends Exception {
      *
      * @param msg the detail message.
      */
-    public CheckoutFailedException(String msg) {
+    public CheckoutException(String msg) {
         super(msg);
     }
 }

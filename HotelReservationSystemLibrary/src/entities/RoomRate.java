@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
@@ -32,7 +33,8 @@ public abstract class RoomRate implements Serializable {
     @NotNull
     private Boolean enabled;
     
-    @ManyToOne
+    @JoinColumn(nullable=false)
+    @ManyToOne(optional=false)
     private RoomType roomType;
 
     public RoomRate() {

@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
@@ -22,7 +23,7 @@ public class PeakRoomRate extends RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @NotNull
-    private List<Date> validityDates = new ArrayList<>();
+    private List<GregorianCalendar> validityDates = new ArrayList<>();
 
     public PeakRoomRate() {
     }
@@ -31,11 +32,11 @@ public class PeakRoomRate extends RoomRate implements Serializable {
         super(ratePerNight, enabled, roomType);
     }
 
-    public List<Date> getValidityDates() {
+    public List<GregorianCalendar> getValidityDates() {
         return validityDates;
     }
 
-    public void setValidityDates(List<Date> validityDates) {
+    public void setValidityDates(List<GregorianCalendar> validityDates) {
         this.validityDates = validityDates;
     }
 

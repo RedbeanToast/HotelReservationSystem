@@ -11,7 +11,8 @@ import javax.validation.constraints.Future;
 import enumerations.ReservationStatusEnum;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +23,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 
@@ -42,15 +45,15 @@ public abstract class Reservation implements Serializable {
     protected BigDecimal amount;
     @NotNull
     @Future
-    @Column(name = "checkIn", columnDefinition="DATETIME")
-    protected Date checkIn;
+    @Column(name = "checkIn")
+    protected GregorianCalendar checkIn;
     @NotNull
     @Future
-    @Column(name = "checkOut", columnDefinition="DATETIME")
-    protected Date checkOut;
+    @Column(name = "checkOut")
+    protected GregorianCalendar checkOut;
     @NotNull
-    @Column(name = "madeDate", columnDefinition="DATETIME")
-    protected Date madeDate;
+    @Column(name = "madeDate")
+    protected GregorianCalendar madeDate;
     @NotNull
     @Enumerated(EnumType.STRING)
     protected ReservationStatusEnum status;
@@ -59,15 +62,19 @@ public abstract class Reservation implements Serializable {
     @Size(min=1)
     @OneToMany(mappedBy="reservation")
     protected List<ReservationLineItem> reservationLineItems;
+    @ManyToOne(optional=false)
+    @JoinColumn(nullable=false)
+    private Guest guest;
 
     public Reservation() {
         
     }
 
-    public Reservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems) {
+    public Reservation(Guest guest, BigDecimal amount, GregorianCalendar checkIn, GregorianCalendar checkOut, GregorianCalendar madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems) {
         
         this();
         
+        this.guest = guest;
         this.amount = amount;
         this.checkIn = checkIn;
         this.checkOut = checkOut;
@@ -77,6 +84,14 @@ public abstract class Reservation implements Serializable {
         
     } 
 
+    public Guest getGuest() {
+        return guest;
+    }
+
+    public void setGuest(Guest guest) {
+        this.guest = guest;
+    }
+
     public BigDecimal getAmount() {
         return amount;
     }
@@ -85,27 +100,27 @@ public abstract class Reservation implements Serializable {
         this.amount = amount;
     }
 
-    public Date getCheckIn() {
+    public Calendar getCheckIn() {
         return checkIn;
     }
 
-    public void setCheckIn(Date checkIn) {
+    public void setCheckIn(GregorianCalendar checkIn) {
         this.checkIn = checkIn;
     }
 
-    public Date getCheckOut() {
+    public GregorianCalendar getCheckOut() {
         return checkOut;
     }
 
-    public void setCheckOut(Date checkOut) {
+    public void setCheckOut(GregorianCalendar checkOut) {
         this.checkOut = checkOut;
     }
 
-    public Date getMadeDate() {
+    public GregorianCalendar getMadeDate() {
         return madeDate;
     }
 
-    public void setMadeDate(Date madeDate) {
+    public void setMadeDate(GregorianCalendar madeDate) {
         this.madeDate = madeDate;
     }
 

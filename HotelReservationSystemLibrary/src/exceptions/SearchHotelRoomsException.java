@@ -9,22 +9,22 @@ package exceptions;
  *
  * @author CaiYuqian
  */
-public class DeleteRoomRateFailedException extends Exception {
+public class SearchHotelRoomsException extends Exception {
 
     /**
-     * Creates a new instance of <code>DeleteRoomRateFailed</code> without
+     * Creates a new instance of <code>SearchHotelRoomsException</code> without
      * detail message.
      */
-    public DeleteRoomRateFailedException() {
+    public SearchHotelRoomsException() {
     }
 
     /**
-     * Constructs an instance of <code>DeleteRoomRateFailed</code> with the
+     * Constructs an instance of <code>SearchHotelRoomsException</code> with the
      * specified detail message.
      *
      * @param msg the detail message.
      */
-    public DeleteRoomRateFailedException(String msg) {
+    public SearchHotelRoomsException(String msg) {
         super(msg);
     }
 }

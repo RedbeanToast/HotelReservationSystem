@@ -31,10 +31,11 @@ public class Partner implements Serializable {
     private Long partnerId;
     @NotNull
     @Size(min=6, max=20)
-    @Column(unique = true)
+    @Column(unique = true, length=20)
     private String name;
     @NotNull
     @Size(min=6, max=20)
+    @Column(length=20)
     private String password;
 
     @OneToMany(mappedBy = "partner")

@@ -17,5 +17,4 @@ import javax.validation.constraints.NotNull;
  */
 public interface RoomTypeControllerLocal {
     RoomType retrieveRoomTypeByName(@NotNull String name) throws RoomTypeNotFoundException;
-    List<RoomType> retrieveRoomTypesByCapacity(Integer capacityRequired);
 }

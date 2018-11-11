@@ -9,13 +9,13 @@ package exceptions;
  *
  * @author CaiYuqian
  */
-public class SearchAvailableRoomsFailedException extends Exception {
+public class SearchAvailableRoomsException extends Exception {
 
     /**
      * Creates a new instance of
      * <code>InvalidSearchingInformationException</code> without detail message.
      */
-    public SearchAvailableRoomsFailedException() {
+    public SearchAvailableRoomsException() {
     }
 
     /**
@@ -25,7 +25,7 @@ public class SearchAvailableRoomsFailedException extends Exception {
      *
      * @param msg the detail message.
      */
-    public SearchAvailableRoomsFailedException(String msg) {
+    public SearchAvailableRoomsException(String msg) {
         super(msg);
     }
 }

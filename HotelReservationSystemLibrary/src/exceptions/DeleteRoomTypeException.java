@@ -9,22 +9,22 @@ package exceptions;
  *
  * @author CaiYuqian
  */
-public class CreateNewRoomFailedException extends Exception {
+public class DeleteRoomTypeException extends Exception {
 
     /**
-     * Creates a new instance of <code>CreateNewRoomFailedException</code>
+     * Creates a new instance of <code>DisableRoomTypeFailedException</code>
      * without detail message.
      */
-    public CreateNewRoomFailedException() {
+    public DeleteRoomTypeException() {
     }
 
     /**
-     * Constructs an instance of <code>CreateNewRoomFailedException</code> with
-     * the specified detail message.
+     * Constructs an instance of <code>DisableRoomTypeFailedException</code>
+     * with the specified detail message.
      *
      * @param msg the detail message.
      */
-    public CreateNewRoomFailedException(String msg) {
+    public DeleteRoomTypeException(String msg) {
         super(msg);
     }
 }

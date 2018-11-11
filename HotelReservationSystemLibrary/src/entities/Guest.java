@@ -30,22 +30,24 @@ public class Guest implements Serializable {
     protected Long guestId;
     @NotNull
     @Size(min=1, max=16)
+    @Column(length=16)
     private String firstName;
     @NotNull
     @Size(min=1, max=16)
+    @Column(length=16)
     private String lastName;
     @NotNull
     @Size(min=6, max=20)
+    @Column(length=20, nullable=false)
     private String phoneNumber;
     @NotNull
     @Size(min=1, max=20)
-    @Column(unique = true)
+    @Column(length=20, nullable=false, unique=true)
     private String identificationNumber;
     
+    // use polymorphism to check the specific type of reservation
     @OneToMany(mappedBy="guest")
-    private List<OnlineHoRSReservation> onlineHoRSReservations = new ArrayList<OnlineHoRSReservation>();
-    @OneToMany(mappedBy="guest")
-    private List<WalkInReservation> walkInReservations = new ArrayList<WalkInReservation>();
+    private List<Reservation> reservations = new ArrayList<Reservation>();
 
     public Guest() {
         
@@ -90,20 +92,12 @@ public class Guest implements Serializable {
         this.identificationNumber = identificationNumber;
     }
 
-    public List<OnlineHoRSReservation> getOnlineHoRSReservations() {
-        return onlineHoRSReservations;
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
-    public void setOnlineHoRSReservations(List<OnlineHoRSReservation> onlineHoRSReservations) {
-        this.onlineHoRSReservations = onlineHoRSReservations;
-    }
-
-    public List<WalkInReservation> getWalkInReservations() {
-        return walkInReservations;
-    }
-
-    public void setWalkInReservations(List<WalkInReservation> walkInReservations) {
-        this.walkInReservations = walkInReservations;
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 
     public Long getGuestId() {

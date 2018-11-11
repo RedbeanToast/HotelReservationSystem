@@ -7,7 +7,9 @@ package entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -31,14 +33,14 @@ public class RoomNight implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomNightId;
     @NotNull
-    private Date date;
+    private GregorianCalendar date;
     
     @NotNull
     @JoinColumn(nullable=false)
     @ManyToOne(optional=false)
     private ReservationLineItem reservationLineItem;
-    @ManyToMany
-    private List<Room> rooms;
+    @ManyToOne
+    private Room room;
     @OneToOne
     private RoomAllocationExceptionReport roomAllocationExceptionReport;
     @NotNull
@@ -50,30 +52,28 @@ public class RoomNight implements Serializable {
         
     }
 
-    public RoomNight(Date date, ReservationLineItem reservationLineItem, RoomRate roomRate) {
+    public RoomNight(GregorianCalendar date, RoomRate roomRate) {
         
         this();
         
         this.date = date;
-        this.reservationLineItem = reservationLineItem;
         this.roomRate = roomRate;
-        this.rooms = new ArrayList<Room>();
     }
 
-    public Date getDate() {
+    public GregorianCalendar getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(GregorianCalendar date) {
         this.date = date;
     }
 
-    public List<Room> getRooms() {
-        return rooms;
+    public Room getRoom() {
+        return room;
     }
 
-    public void setRooms(List<Room> rooms) {
-        this.rooms = rooms;
+    public void setRoom(Room room) {
+        this.room = room;
     }
 
     public RoomAllocationExceptionReport getRoomAllocationExceptionReport() {
@@ -98,6 +98,14 @@ public class RoomNight implements Serializable {
 
     public void setRoomNightId(Long roomNightId) {
         this.roomNightId = roomNightId;
+    }
+
+    public ReservationLineItem getReservationLineItem() {
+        return reservationLineItem;
+    }
+
+    public void setReservationLineItem(ReservationLineItem reservationLineItem) {
+        this.reservationLineItem = reservationLineItem;
     }
 
     @Override

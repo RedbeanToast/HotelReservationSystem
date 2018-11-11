@@ -5,10 +5,16 @@
  */
 package entities;
 
+import entities.Employee;
+import entities.Guest;
+import entities.Reservation;
+import entities.ReservationLineItem;
 import javax.validation.constraints.NotNull;
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -27,19 +33,14 @@ public class WalkInReservation extends Reservation {
     @ManyToOne(optional=false)
     @JoinColumn(nullable=false)
     private Employee employee;
-    @NotNull
-    @ManyToOne(optional=false)
-    @JoinColumn(nullable=false)
-    private Guest guest;
     
     public WalkInReservation() {
         
     }
 
-    public WalkInReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Employee employee, Guest guest) {
-        super(amount, checkIn, checkOut, madeDate, status, reservationLineItems);
+    public WalkInReservation(Guest guest, BigDecimal amount, GregorianCalendar checkIn, GregorianCalendar checkOut, GregorianCalendar madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Employee employee) {
+        super(guest, amount, checkIn, checkOut, madeDate, status, reservationLineItems);
         this.employee = employee;
-        this.guest = guest;
     }
 
     public Employee getEmployee() {
@@ -48,14 +49,6 @@ public class WalkInReservation extends Reservation {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-    }
-
-    public Guest getGuest() {
-        return guest;
-    }
-
-    public void setGuest(Guest guest) {
-        this.guest = guest;
     }
  
     @Override

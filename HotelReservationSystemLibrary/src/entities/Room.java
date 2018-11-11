@@ -41,14 +41,14 @@ public class Room implements Serializable {
     private RoomStatusEnum roomStatus;
     @NotNull
     private Boolean enabled;
-    private Reservation currentOccupancy;
+    private ReservationLineItem currentOccupancy;
     
     @NotNull
     @JoinColumn(nullable=false)
     @ManyToOne(optional=false)
     private RoomType roomType;
-    @ManyToMany(mappedBy="rooms")
-    private List<RoomNight> roomNights = new ArrayList<RoomNight>();
+    @ManyToMany
+    private List<ReservationLineItem> successfulReservations;
 
     public Room() {
         
@@ -62,6 +62,7 @@ public class Room implements Serializable {
         this.roomStatus = roomStatus;
         this.enabled = enabled;
         this.roomType = roomType;
+        this.successfulReservations = new ArrayList<>();
     }
 
     public Integer getRoomNumber() {
@@ -96,20 +97,20 @@ public class Room implements Serializable {
         this.roomType = roomType;
     }
 
-    public Reservation getCurrentOccupancy() {
+    public ReservationLineItem getCurrentOccupancy() {
         return currentOccupancy;
     }
 
-    public void setCurrentOccupancy(Reservation currentOccupancy) {
+    public void setCurrentOccupancy(ReservationLineItem currentOccupancy) {
         this.currentOccupancy = currentOccupancy;
     }
 
-    public List<RoomNight> getRoomNights() {
-        return roomNights;
+    public List<ReservationLineItem> getSuccessfulReservations() {
+        return successfulReservations;
     }
 
-    public void setRoomNights(List<RoomNight> roomNights) {
-        this.roomNights = roomNights;
+    public void setSuccessfulReservations(List<ReservationLineItem> successfulReservations) {
+        this.successfulReservations = successfulReservations;
     }
 
     public Long getRoomId() {

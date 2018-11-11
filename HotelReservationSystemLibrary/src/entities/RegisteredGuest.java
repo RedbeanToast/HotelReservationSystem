@@ -29,9 +29,6 @@ public class RegisteredGuest extends Guest implements Serializable {
     @NotNull
     @Size(min=6, max=25)
     private String password;
-    
-    @OneToMany(mappedBy = "registeredGuest")
-    private List<OnlineHoRSReservation> onlinePartnerReservations = new ArrayList<OnlineHoRSReservation>();
 
     public RegisteredGuest() {
         
@@ -57,14 +54,6 @@ public class RegisteredGuest extends Guest implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public List<OnlineHoRSReservation> getOnlinePartnerReservations() {
-        return onlinePartnerReservations;
-    }
-
-    public void setOnlinePartnerReservations(List<OnlineHoRSReservation> onlinePartnerReservations) {
-        this.onlinePartnerReservations = onlinePartnerReservations;
     }
 
     @Override

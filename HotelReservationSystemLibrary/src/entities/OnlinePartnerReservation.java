@@ -7,7 +7,9 @@ package entities;
 
 import enumerations.ReservationStatusEnum;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -27,20 +29,15 @@ public class OnlinePartnerReservation extends Reservation {
     @ManyToOne(optional=false)
     @JoinColumn(nullable=false)
     private Partner partner;
-    @NotNull
-    @ManyToOne(optional=false)
-    @JoinColumn(nullable=false)
-    private Guest guest;
     
 
     public OnlinePartnerReservation() {
         
     }
 
-    public OnlinePartnerReservation(BigDecimal amount, Date checkIn, Date checkOut, Date madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Partner partner, Guest guest) {
-        super(amount, checkIn, checkOut, madeDate, status, reservationLineItems);
+    public OnlinePartnerReservation(Guest guest, BigDecimal amount, GregorianCalendar checkIn, GregorianCalendar checkOut, GregorianCalendar madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Partner partner) {
+        super(guest, amount, checkIn, checkOut, madeDate, status, reservationLineItems);
         this.partner = partner;
-        this.guest = guest;
     }
 
     public Long getReservationId() {
@@ -49,14 +46,6 @@ public class OnlinePartnerReservation extends Reservation {
 
     public void setReservationId(Long reservationId) {
         this.reservationId = reservationId;
-    }
-
-    public Guest getGuest() {
-        return guest;
-    }
-
-    public void setGuest(Guest guest) {
-        this.guest = guest;
     }
 
     public Partner getPartner() {

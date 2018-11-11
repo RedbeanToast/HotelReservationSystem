@@ -5,8 +5,10 @@
  */
 package utilities;
 
+import entities.RoomNight;
 import entities.RoomRate;
 import entities.RoomType;
+import java.util.List;
 
 /**
  *
@@ -14,12 +16,13 @@ import entities.RoomType;
  */
 public class RoomSearchResult {
     private RoomType roomType;
-    private RoomRate roomRate;
+    // a collection is used here since during a single hotel stay different room rates may apply 
+    private List<RoomNight> roomNights;
     private Integer amountAvailable = 0;
 
-    public RoomSearchResult(RoomType roomType, RoomRate roomRate, Integer amountAvailable) {
+    public RoomSearchResult(RoomType roomType, List<RoomNight> roomNights, Integer amountAvailable) {
         this.roomType = roomType;
-        this.roomRate = roomRate;
+        this.roomNights = roomNights;
         this.amountAvailable = amountAvailable;
     }
 
@@ -31,12 +34,12 @@ public class RoomSearchResult {
         this.roomType = roomType;
     }
 
-    public RoomRate getRoomRate() {
-        return roomRate;
+    public List<RoomNight> getRoomNights() {
+        return roomNights;
     }
 
-    public void setRoomRate(RoomRate roomRate) {
-        this.roomRate = roomRate;
+    public void setRoomNights(List<RoomNight> roomNights) {
+        this.roomNights = roomNights;
     }
 
     public Integer getAmountAvailable() {
