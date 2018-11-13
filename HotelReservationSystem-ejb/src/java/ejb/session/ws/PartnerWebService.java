@@ -183,11 +183,7 @@ public class PartnerWebService {
         OnlinePartnerReservation reservation = partnerCheckoutControllerLocal.checkOutReservation(name, identificationNumber,
             firstName, lastName, phoneNumber);
         remotePartnerCheckoutManager.removeRemotePartnerCheckoutController(sessionKey);
-        
-        em.detach(reservation);
-        em.detach(reservation.getPartner());
-        reservation.setPartner(null);
-        
+
         return reservation;
     }
 }

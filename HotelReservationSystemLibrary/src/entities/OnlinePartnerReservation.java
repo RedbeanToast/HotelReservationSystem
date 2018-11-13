@@ -35,7 +35,8 @@ public class OnlinePartnerReservation extends Reservation {
         
     }
 
-    public OnlinePartnerReservation(Guest guest, BigDecimal amount, GregorianCalendar checkIn, GregorianCalendar checkOut, GregorianCalendar madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Partner partner) {
+    public OnlinePartnerReservation(Guest guest, BigDecimal amount, GregorianCalendar checkIn, GregorianCalendar checkOut, 
+            GregorianCalendar madeDate, ReservationStatusEnum status, List<ReservationLineItem> reservationLineItems, Partner partner) {
         super(guest, amount, checkIn, checkOut, madeDate, status, reservationLineItems);
         this.partner = partner;
     }
