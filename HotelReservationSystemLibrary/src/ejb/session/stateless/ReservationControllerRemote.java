@@ -23,5 +23,8 @@ import utilities.RoomSearchResult;
 
 public interface ReservationControllerRemote {
     Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
+    
     List<RoomAllocationExceptionReport> retrieveRoomAllocationExceptionReports();
+    
+    void allocateRoomsToCurrentDayReservations();
 }

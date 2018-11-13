@@ -61,7 +61,7 @@ public class RoomType implements Serializable {
         
     }
 
-    public RoomType(String name, String dexcription, BigDecimal size, Integer numOfBeds, Integer capacity) {
+    public RoomType(String name, String dexcription, BigDecimal size, Integer numOfBeds, Integer capacity, List<String> amenities) {
         
         this();
         
@@ -71,6 +71,7 @@ public class RoomType implements Serializable {
         this.numOfBeds = numOfBeds;
         this.capacity = capacity;
         this.enabled = true;
+        this.amenities = amenities;
     }
 
     public String getName() {

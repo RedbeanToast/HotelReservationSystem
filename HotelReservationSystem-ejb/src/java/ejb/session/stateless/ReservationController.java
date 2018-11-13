@@ -297,8 +297,10 @@ public class ReservationController implements ReservationControllerRemote, Reser
         return query.getResultList();
     }
     
+    
     @Schedule(hour="2")
-    private void allocateRoomsToCurrentDayReservations(){
+    @Override
+    public void allocateRoomsToCurrentDayReservations() {
 
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.status = :inStatus AND r.checkIn = :today ORDER BY r.madeDate ASC");
         query.setParameter("inStatus", ReservationStatusEnum.SUCCESS.toString());
