@@ -6,8 +6,12 @@
 package ejb.session.stateless;
 
 import entities.Room;
+import exceptions.InsufficientNumOfRoomForAllocationException;
 import exceptions.RoomNotFoundException;
+import java.util.GregorianCalendar;
+import java.util.List;
 import javax.ejb.Local;
+import javax.validation.constraints.NotNull;
 
 /**
  *
@@ -16,4 +20,5 @@ import javax.ejb.Local;
 
 public interface RoomControllerLocal {
     Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
+    List<Room> searchAvailableRoomsForAllocation(@NotNull Long roomTypeID, @NotNull Integer numOfRoomsRequired, @NotNull GregorianCalendar checkOutDate) throws InsufficientNumOfRoomForAllocationException;
 }

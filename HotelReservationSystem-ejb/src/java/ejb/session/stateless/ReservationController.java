@@ -14,25 +14,29 @@ import entities.RegisteredGuest;
 import entities.Reservation;
 import entities.ReservationLineItem;
 import entities.Room;
+import entities.RoomAllocationExceptionReport;
 import entities.RoomNight;
 import entities.RoomType;
 import entities.WalkInReservation;
+import enumerations.AllocationExceptionTypeEnum;
 import enumerations.ReservationStatusEnum;
-import enumerations.RoomStatusEnum;
 import exceptions.CreateReservationException;
+import exceptions.InsufficientNumOfRoomForAllocationException;
+import exceptions.PartnerNotFoundException;
 import exceptions.ReservationNotFoundException;
 import exceptions.RetrieveReservationException;
 import exceptions.SearchHotelRoomsException;
 import exceptions.SearchRoomRateException;
+import exceptions.UpgradeRoomTypeNotFound;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
+import javax.ejb.Schedule;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -61,6 +65,8 @@ public class ReservationController implements ReservationControllerRemote, Reser
     private RoomRateControllerLocal roomRateControllerLocal;
     @EJB
     private RoomControllerLocal roomControllerLocal;
+    @EJB
+    private PartnerControllerLocal partnerControllerLocal;
 
     @Override
     public List<OnlineHoRSReservation> retrieveAllOnlineHoRSReservationByEmail(@NotNull String email) throws RetrieveReservationException {
@@ -99,6 +105,11 @@ public class ReservationController implements ReservationControllerRemote, Reser
         Reservation reservation = em.find(Reservation.class, reservationId);
         if(reservation == null){
             throw new ReservationNotFoundException("Reservation with ID " + reservationId + " does not exist!");
+        }
+        for(ReservationLineItem reservationLineItem: reservation.getReservationLineItems()){
+            for(RoomNight roomNight: reservationLineItem.getRoomNights()){
+                roomNight.getRoom();
+            }
         }
         return reservation;
     }
@@ -218,24 +229,59 @@ public class ReservationController implements ReservationControllerRemote, Reser
     }
     
     @Override
-    public OnlinePartnerReservation createNewOnlinePartnerReservation(@NotNull OnlinePartnerReservation reservation, @NotNull String partnerName){
-        return new OnlinePartnerReservation();
+    public OnlinePartnerReservation createNewOnlinePartnerReservation(@NotNull List<ReservationLineItem> reservationLineItems, @NotNull String partnerName, 
+            @NotNull GregorianCalendar checkInDate, @NotNull GregorianCalendar checkOutDate, @NotNull BigDecimal totalAmount, 
+            @NotNull String identificationNumber, @NotNull String firstName, @NotNull String lastName, @NotNull String phoneNumber)
+            throws CreateReservationException
+    {
+        
+        // check whether the guest exists
+        Query query = em.createQuery("SELECT g FROM Guest g WHERE g.identificationNumber = :inIdentificationNumber");
+        query.setParameter("inIdentificationNumber", identificationNumber);
+        Guest guest = (Guest)query.getSingleResult();
+        if(guest == null){
+            // create a new guest
+            guest = new Guest(firstName, lastName, identificationNumber, phoneNumber);
+            em.persist(guest);
+            em.flush();
+        }
+        // retrieve partner
+        try {
+            Partner partner = partnerControllerLocal.retrievePartnerByName(partnerName);
+
+            OnlinePartnerReservation reservation = new OnlinePartnerReservation(guest, totalAmount, checkInDate, checkOutDate, new GregorianCalendar(), ReservationStatusEnum.SUCCESS, reservationLineItems, partner);
+            partner.getOnlinePartnerReservations().add(reservation);
+            guest.getReservations().add(reservation);
+            // persist all associated relationship attributes
+            em.persist(reservation);
+            for (ReservationLineItem reservationLineItem : reservationLineItems) {
+                reservationLineItem.setReservation(reservation);
+                em.persist(reservationLineItem);
+                for (RoomNight roomNight : reservationLineItem.getRoomNights()) {
+                    em.persist(roomNight);
+                }
+            }
+
+            em.flush();
+
+            // nullify the relationship attributes to avoid cyclic reference in web service
+            em.detach(reservation);
+            reservation.setPartner(null);
+            reservation.setGuest(null);
+            reservation.getReservationLineItems().clear();
+            return reservation;
+        }catch(PartnerNotFoundException ex){
+            throw new CreateReservationException(ex.getMessage());
+        }
+
+        
     }
-    
-//    // To make a reservation, the room type and room rate must exist in advance otherwise the reservation cannot be made
-//    // By default, when a reservation is initiated, isUpgraded = false, roomAllocated and allocatedRoomType are null
-//    // important: a certain room type's associated reservations are SUCCESSFUL reservations
-//    public Reservation reserveRoom(Reservation reservation) {
-//        em.persist(reservation);
-//        em.flush();
-//        
-//        return reservation;
-//    }
 
     // The reservations returned are only for valid check-in on the CURRENT date.
+    @Override
     public List<Reservation> retrieveValidReservationsByGuestIdentificationNumber(@NotNull String identificationNumber) {
         List<Reservation> validReservations = new ArrayList<Reservation>();
-            
+        
         // Walkin reservations
         Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.guest.identificationNumber = :inIdentificationNumber AND r.checkIn = :today");
         query.setParameter("inIdentificationNumber", identificationNumber);
@@ -245,5 +291,85 @@ public class ReservationController implements ReservationControllerRemote, Reser
         return validReservations;
     }
     
+    @Override
+    public List<RoomAllocationExceptionReport> retrieveRoomAllocationExceptionReports() {
+        Query query = em.createQuery("SELECT r FROM RoomAllocationExceptionReport r ORDER BY r.reportId ASC");
+        return query.getResultList();
+    }
+    
+    @Schedule(hour="2")
+    private void allocateRoomsToCurrentDayReservations(){
 
+        Query query = em.createQuery("SELECT r FROM Reservation r WHERE r.status = :inStatus AND r.checkIn = :today ORDER BY r.madeDate ASC");
+        query.setParameter("inStatus", ReservationStatusEnum.SUCCESS.toString());
+        query.setParameter("today", Calendar.getInstance(), TemporalType.DATE);
+        List<Reservation> reservations = query.getResultList();
+        
+        // assign the reservations to rooms one by one, generate room allocation exception report if necessary
+        // assumption: a guest cannot change his/her room during the stay
+        for(Reservation reservation: reservations){
+            for(ReservationLineItem reservationLineItem: reservation.getReservationLineItems()){
+                // note: there may be more than one room in the reservation line item,
+                // note:    and some of them are not able to be allocated -> need to check separately
+                try{
+                    List<Room> availableRooms = roomControllerLocal.searchAvailableRoomsForAllocation(reservationLineItem.getIntendedRoomType().getRoomTypeId(), reservationLineItem.getNumOfRooms(), reservationLineItem.getReservation().getCheckOut());
+                    query = em.createQuery("SELECT rn FROM RoomNight rn WHERE rn.reservationLineItem.reservationLineItemId = :inReservationLineItemId ORDER BY rn.date ASC");
+                    query.setParameter("inReservationLineItemId", reservationLineItem.getReservationLineItemId());
+                    List<RoomNight> roomNights = query.getResultList();
+                    // assign rooms to roomnight randomly 
+                    int numOfRooms = reservationLineItem.getNumOfRooms();
+                    int numOfNights = roomNights.size() / numOfRooms;
+                    for(int roomNo = 0; roomNo < numOfRooms; roomNo++){
+                        for(int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRooms){
+                            roomNights.get(roomNightNo).setRoom(availableRooms.get(roomNo));
+                            availableRooms.get(roomNo).getSuccessfulReservations().add(reservationLineItem);
+                        }
+                    }
+                    reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+                }catch(InsufficientNumOfRoomForAllocationException ex){
+                    // check whether upgrade is possible
+                    try {
+                        RoomType upgradeRoomType = roomTypeControllerLocal.retrieveUpgradeRoomType(reservationLineItem.getIntendedRoomType());
+                        try {
+                            List<Room> availableRooms = roomControllerLocal.searchAvailableRoomsForAllocation(upgradeRoomType.getRoomTypeId(), reservationLineItem.getNumOfRooms(), reservationLineItem.getReservation().getCheckOut());
+                            query = em.createQuery("SELECT rn FROM RoomNight rn WHERE rn.reservationLineItem.reservationLineItemId = :inReservationLineItemId ORDER BY rn.date ASC");
+                            query.setParameter("inReservationLineItemId", reservationLineItem.getReservationLineItemId());
+                            List<RoomNight> roomNights = query.getResultList();
+                            // assign rooms to roomnight randomly 
+                            int numOfRooms = reservationLineItem.getNumOfRooms();
+                            int numOfNights = roomNights.size() / numOfRooms;
+                            for (int roomNo = 0; roomNo < numOfRooms; roomNo++) {
+                                for (int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRooms) {
+                                    roomNights.get(roomNightNo).setRoom(availableRooms.get(roomNo));
+                                    availableRooms.get(roomNo).getSuccessfulReservations().add(reservationLineItem);
+                                }
+                            }
+                            reservation.setStatus(ReservationStatusEnum.ALLOCATED);
+                            // generate room allocation exception report
+                            RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();
+                            report.setExceptionType(AllocationExceptionTypeEnum.UPGRADED);
+                            report.setReservationLineItem(reservationLineItem);
+                            em.persist(report);
+                        } catch (InsufficientNumOfRoomForAllocationException ex1) {
+                            // upgrade room type exists but there are insufficient rooms for the upgrade room type
+                            // generate room allocation exception report
+                            RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();
+                            report.setExceptionType(AllocationExceptionTypeEnum.UPGRADEFAILED);
+                            report.setReservationLineItem(reservationLineItem);
+                            em.persist(report);
+                            reservation.setStatus(ReservationStatusEnum.FAILED);
+                        }
+                    }catch(UpgradeRoomTypeNotFound ex2){
+                        // no upgrade room type available
+                        // generate room allocation exception report
+                        RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();
+                        report.setExceptionType(AllocationExceptionTypeEnum.UPGRADEFAILED);
+                        report.setReservationLineItem(reservationLineItem);
+                        em.persist(report);
+                        reservation.setStatus(ReservationStatusEnum.FAILED);
+                    }
+                }
+            }
+        }
+    }
 }

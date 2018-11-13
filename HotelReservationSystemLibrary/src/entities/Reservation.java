@@ -100,7 +100,7 @@ public abstract class Reservation implements Serializable {
         this.amount = amount;
     }
 
-    public Calendar getCheckIn() {
+    public GregorianCalendar getCheckIn() {
         return checkIn;
     }
 

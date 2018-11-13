@@ -14,7 +14,6 @@ import exceptions.RetrieveReservationException;
 import exceptions.SearchHotelRoomsException;
 import java.util.GregorianCalendar;
 import java.util.List;
-import javax.ejb.Local;
 import javax.validation.constraints.NotNull;
 import utilities.RoomSearchResult;
 
@@ -25,7 +24,12 @@ import utilities.RoomSearchResult;
 
 public interface PartnerControllerLocal {
     Partner loginPartner(@NotNull String name, @NotNull String password) throws PartnerNotFoundException, InvalidLoginCredentialsException;
+    
     List<OnlinePartnerReservation> retrieveAllOnlinePartnerReservations(@NotNull String name) throws RetrieveReservationException;
+    
     OnlinePartnerReservation retrieveOnlinePartnerReservationDetailsByReservationId(Long reservationId) throws ReservationNotFoundException;
+    
     List<RoomSearchResult> searchHotelRooms(@NotNull GregorianCalendar checkInDate, @NotNull GregorianCalendar checkOutDate) throws SearchHotelRoomsException;
+
+    Partner retrievePartnerByName(@NotNull String name) throws PartnerNotFoundException;
 }

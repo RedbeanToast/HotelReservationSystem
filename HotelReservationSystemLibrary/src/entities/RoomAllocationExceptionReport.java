@@ -33,18 +33,18 @@ public class RoomAllocationExceptionReport implements Serializable {
     
     @OneToOne(mappedBy="roomAllocationExceptionReport")
     @NotNull
-    private RoomNight roomNight;
+    private ReservationLineItem reservationLineItem;
 
     public RoomAllocationExceptionReport() {
         
     }
 
-    public RoomAllocationExceptionReport(AllocationExceptionTypeEnum exceptionType, RoomNight roomNight) {
+    public RoomAllocationExceptionReport(AllocationExceptionTypeEnum exceptionType, ReservationLineItem reservationLineItem) {
         
         this();
         
         this.exceptionType = exceptionType;
-        this.roomNight = roomNight;
+        this.reservationLineItem = reservationLineItem;
     }
 
     public AllocationExceptionTypeEnum getExceptionType() {
@@ -55,12 +55,12 @@ public class RoomAllocationExceptionReport implements Serializable {
         this.exceptionType = exceptionType;
     }
 
-    public RoomNight getRoomNight() {
-        return roomNight;
+    public ReservationLineItem getReservationLineItem() {
+        return reservationLineItem;
     }
 
-    public void setRoomNight(RoomNight roomNight) {
-        this.roomNight = roomNight;
+    public void setReservationLineItem(ReservationLineItem reservationLineItem) {
+        this.reservationLineItem = reservationLineItem;
     }
 
     public Long getReportId() {

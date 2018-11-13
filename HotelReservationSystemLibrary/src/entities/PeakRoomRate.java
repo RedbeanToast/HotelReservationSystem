@@ -8,9 +8,9 @@ package entities;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
@@ -23,6 +23,7 @@ public class PeakRoomRate extends RoomRate implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @NotNull
+    @ElementCollection
     private List<GregorianCalendar> validityDates = new ArrayList<>();
 
     public PeakRoomRate() {

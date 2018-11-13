@@ -7,6 +7,7 @@ package ejb.session.stateless;
 
 import entities.RoomRate;
 import entities.RoomType;
+import exceptions.RoomRateNotFoundException;
 import exceptions.SearchRoomRateException;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,5 +20,8 @@ import javax.validation.constraints.NotNull;
  */
 
 public interface RoomRateControllerLocal {
-    RoomRate searchPrevailingRoomRate(@NotNull GregorianCalendar date, RoomType roomType, String reservationType) throws SearchRoomRateException;
+    RoomRate searchPrevailingRoomRate(@NotNull GregorianCalendar date, RoomType roomType, String reservationType) 
+            throws SearchRoomRateException;
+    
+    RoomRate retrieveRoomRateById(@NotNull Long rateId) throws RoomRateNotFoundException;
 }

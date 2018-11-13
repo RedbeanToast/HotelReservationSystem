@@ -8,8 +8,8 @@ package enumerations;
 
 public enum RoomStatusEnum {
     AVAILABLE,
-    RESERBED,
     OCCUPIED,
+    PROLONGEDOCCUPIED,
     CLEANING,
     MAINTENANCE
 }

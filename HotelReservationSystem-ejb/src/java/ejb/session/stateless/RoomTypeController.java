@@ -8,6 +8,8 @@ package ejb.session.stateless;
 import entities.RoomType;
 import exceptions.DeleteRoomTypeException;
 import exceptions.RoomTypeNotFoundException;
+import exceptions.UpgradeRoomTypeNotFound;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -105,6 +107,19 @@ public class RoomTypeController implements RoomTypeControllerRemote, RoomTypeCon
             }
         } catch (RoomTypeNotFoundException ex) {
             throw new DeleteRoomTypeException("Room type deletion failed: " + ex.getMessage());
+        }
+    }
+    
+    @Override
+    public RoomType retrieveUpgradeRoomType(@NotNull RoomType roomType) throws UpgradeRoomTypeNotFound {
+        BigDecimal size = roomType.getSize();
+        Query query = em.createQuery("SELECT rt FROM RoomType rt WHERE rt.size > :inSize ORDER BY rt.size ASC");
+        query.setParameter("inSize", size);
+        RoomType upgradeRoomType = (RoomType)query.setMaxResults(1).getSingleResult();
+        if(upgradeRoomType == null){
+            throw new UpgradeRoomTypeNotFound("No upgrade room type available!");
+        }else{
+            return upgradeRoomType;
         }
     }
 }

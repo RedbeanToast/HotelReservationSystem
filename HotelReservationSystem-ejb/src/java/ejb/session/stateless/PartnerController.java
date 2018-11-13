@@ -5,10 +5,11 @@
  */
 package ejb.session.stateless;
 
-import entities.OnlineHoRSReservation;
 import entities.OnlinePartnerReservation;
 import entities.Partner;
 import entities.Reservation;
+import entities.ReservationLineItem;
+import entities.RoomType;
 import exceptions.InvalidLoginCredentialsException;
 import exceptions.PartnerNotFoundException;
 import exceptions.ReservationNotFoundException;
@@ -55,14 +56,32 @@ public class PartnerController implements PartnerControllerLocal {
     
     @Override
     public List<OnlinePartnerReservation> retrieveAllOnlinePartnerReservations(@NotNull String name) throws RetrieveReservationException {
-        return reservationControllerLocal.retrieveAllOnlinePartnerReservationByName(name);
+        List<OnlinePartnerReservation> reservations = reservationControllerLocal.retrieveAllOnlinePartnerReservationByName(name);
+        // nullify the bidirectional relationship attributes to avoid cyclic reference in web service
+        // the information returned will only be the online reservations not associated with anything
+        // room nights are excluded
+        for(OnlinePartnerReservation reservation: reservations){
+            em.detach(reservation);
+            reservation.getReservationLineItems().clear();
+            reservation.setPartner(null);
+            reservation.setGuest(null);
+        }
+        
+        return reservations;
     }
     
     @Override 
     public OnlinePartnerReservation retrieveOnlinePartnerReservationDetailsByReservationId(Long reservationId) throws ReservationNotFoundException {
         Reservation reservation = reservationControllerLocal.retrieveReservationById(reservationId);
         if(reservation instanceof OnlinePartnerReservation){
-            return (OnlinePartnerReservation)reservation;
+            OnlinePartnerReservation reservationFound =  (OnlinePartnerReservation)reservation;
+            em.detach(reservationFound);
+            // nullify the bidirection relationship attributes to avoid cyclic reference issue in web service
+            for(ReservationLineItem reservationLineItem: reservationFound.getReservationLineItems()){
+                reservationLineItem.setReservation(null);
+                reservationLineItem.getRoomNights().clear();
+            }
+            return reservationFound;
         }else{
             throw new ReservationNotFoundException("There is no online partner reservation with id " + reservationId + "!");
         }
@@ -76,18 +95,17 @@ public class PartnerController implements PartnerControllerLocal {
         List<RoomSearchResult> roomSearchResults = reservationControllerLocal.searchHotelRooms(checkInDate, checkOutDate, "OnlinePartnerReservation");
         // lazy fetching all the information about the room type
         for(RoomSearchResult roomSearchResult: roomSearchResults){
-            roomSearchResult.getRoomType().getAmenities().size();
+            RoomType roomType = roomSearchResult.getRoomType();
+            roomType.getAmenities().size();
+            em.detach(roomType);
+            roomType.setRooms(null);
+            
         }
         return roomSearchResults;
     }
     
-    // because online partners will use web services to do the room reservation, only stateless session bean can be used.
-    // hence, parameter for the check out can only be the whole reservation object
-    public Reservation checkOutReservation(@NotNull OnlinePartnerReservation reservation, @NotNull String partnerName){
-        return reservationControllerLocal.createNewOnlinePartnerReservation(reservation, partnerName);
-    }
-    
-    private Partner retrievePartnerByName(@NotNull String name) throws PartnerNotFoundException{
+    @Override
+    public Partner retrievePartnerByName(@NotNull String name) throws PartnerNotFoundException {
         Query query = em.createQuery("SELECT p FROM Partner p WHERE p.name = :inName");
         query.setParameter("inName", name);
         try{

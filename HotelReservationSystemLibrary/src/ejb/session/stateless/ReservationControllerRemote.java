@@ -6,7 +6,9 @@
 package ejb.session.stateless;
 
 import entities.Reservation;
+import entities.RoomAllocationExceptionReport;
 import entities.WalkInReservation;
+import exceptions.ReservationNotFoundException;
 import exceptions.SearchAvailableRoomsException;
 import java.util.Calendar;
 import java.util.List;
@@ -20,5 +22,6 @@ import utilities.RoomSearchResult;
  */
 
 public interface ReservationControllerRemote {
-    
+    Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
+    List<RoomAllocationExceptionReport> retrieveRoomAllocationExceptionReports();
 }

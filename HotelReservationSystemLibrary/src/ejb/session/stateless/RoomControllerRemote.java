@@ -5,6 +5,7 @@
  */
 package ejb.session.stateless;
 
+import entities.LateCheckoutExceptionReport;
 import entities.Room;
 import exceptions.CreateNewRoomException;
 import exceptions.DeleteRoomException;
@@ -22,6 +23,7 @@ public interface RoomControllerRemote {
     Room createNewRoom(@NotNull Integer roomNumber, @NotNull String roomTypeName) throws CreateNewRoomException;
     Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
     List<Room> retrieveAllRooms();
-    void updateRoom(@NotNull Room room) throws UpdateRoomException;
+    void updateRoom(@NotNull Room room, @NotNull Boolean isBusinessRelated) throws UpdateRoomException;
     void deleteRoom(@NotNull Integer roomNumber) throws DeleteRoomException;
+    List<LateCheckoutExceptionReport> retrieveLateCheckoutExceptionReports();
 }

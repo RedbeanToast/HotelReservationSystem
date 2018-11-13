@@ -5,7 +5,6 @@
  */
 package ejb.session.stateless;
 
-import entities.Guest;
 import entities.OnlineHoRSReservation;
 import entities.OnlinePartnerReservation;
 import entities.Reservation;
@@ -28,10 +27,20 @@ import utilities.RoomSearchResult;
 
 public interface ReservationControllerLocal {
     List<OnlineHoRSReservation> retrieveAllOnlineHoRSReservationByEmail(@NotNull String email) throws RetrieveReservationException;
+    
     List<OnlinePartnerReservation> retrieveAllOnlinePartnerReservationByName(@NotNull String name) throws RetrieveReservationException;
+    
     Reservation retrieveReservationById(Long reservationId) throws ReservationNotFoundException;
+    
+    List<Reservation> retrieveValidReservationsByGuestIdentificationNumber(@NotNull String identificationNumber);
+    
     List<RoomSearchResult> searchHotelRooms(@NotNull GregorianCalendar checkInDate, @NotNull GregorianCalendar checkOutDate, @NotNull String reservatonType) throws SearchHotelRoomsException;
+    
     OnlineHoRSReservation createNewOnlineHoRSReservation(@NotNull List<ReservationLineItem> reservationLineItems, @NotNull String email, @NotNull GregorianCalendar checkInDate, @NotNull GregorianCalendar checkOutDate, @NotNull BigDecimal totalAmount) throws CreateReservationException;
+    
     WalkInReservation createNewWalkInReservation(@NotNull List<ReservationLineItem> reservationLineItems, @NotNull Long guestId, @NotNull Long employeeId, @NotNull GregorianCalendar checkOutDate, @NotNull BigDecimal totalAmount) throws CreateReservationException;
-    OnlinePartnerReservation createNewOnlinePartnerReservation(@NotNull OnlinePartnerReservation reservation, @NotNull String partnerName);
+    
+    OnlinePartnerReservation createNewOnlinePartnerReservation(@NotNull List<ReservationLineItem> reservationLineItems, @NotNull String partnerName, 
+            @NotNull GregorianCalendar checkInDate, @NotNull GregorianCalendar checkOutDate, @NotNull BigDecimal totalAmount, 
+            @NotNull String identificationNumber, @NotNull String firstName, @NotNull String lastName, @NotNull String phoneNumber) throws CreateReservationException;
 }
