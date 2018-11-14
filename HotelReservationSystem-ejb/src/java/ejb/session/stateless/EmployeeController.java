@@ -63,7 +63,7 @@ public class EmployeeController implements EmployeeControllerRemote, EmployeeCon
     
     public List<Employee> retrieveAllEmployees() {
         Query query = em.createQuery("SELECT e FROM Employee e");
-        List<Employee> employees = (List<Employee>)query.getResultList();
+        List<Employee> employees = query.getResultList();
         return employees;
     }
 }

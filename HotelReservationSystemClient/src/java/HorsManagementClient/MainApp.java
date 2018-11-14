@@ -5,7 +5,9 @@
  */
 package HorsManagementClient;
 
+import ejb.session.stateful.WalkInReservationControllerRemote;
 import ejb.session.stateless.EmployeeControllerRemote;
+import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
@@ -13,21 +15,28 @@ import entities.Employee;
 import exceptions.EmployeeNotFoundException;
 import java.util.Scanner;
 import exceptions.InvalidLoginCredentialsException;
-import exceptions.InvalidAccessRightException;
+
 import java.text.ParseException;
+import javax.ejb.EJB;
 /**
  *
  * @author zhangruichun
  */
 
 public class MainApp {
+    
+    @EJB
     private EmployeeControllerRemote employeeControllerRemote;
-    
+    @EJB
     private RoomControllerRemote roomControllerRemote;
-    
+    @EJB
     private RoomRateControllerRemote roomRateControllerRemote;
-    
+    @EJB
     private RoomTypeControllerRemote roomTypeControllerRemote;
+    @EJB
+    private static WalkInReservationControllerRemote walkInReservationControllerRemote;
+    @EJB
+    private static ReservationControllerRemote reservationControllerRemote;
     
     
     
@@ -43,15 +52,19 @@ public class MainApp {
         
     }
 
-    public MainApp(EmployeeControllerRemote employeeControllerRemote, RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote) {
+    public MainApp(EmployeeControllerRemote employeeControllerRemote, RoomControllerRemote roomControllerRemote, 
+            RoomRateControllerRemote roomRateControllerRemote, RoomTypeControllerRemote roomTypeControllerRemote,
+            WalkInReservationControllerRemote walkInReservationControllerRemote, ReservationControllerRemote reservationControllerRemote) {
         this.employeeControllerRemote = employeeControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
         this.roomTypeControllerRemote = roomTypeControllerRemote;
+        this.walkInReservationControllerRemote = walkInReservationControllerRemote;
+        this.reservationControllerRemote = reservationControllerRemote;
         
     }
     
-    public void runApp() throws EmployeeNotFoundException, InvalidAccessRightException, ParseException{
+    public void runApp() throws EmployeeNotFoundException,ParseException{
         Scanner sc = new Scanner(System.in);
 	int response;
 
@@ -69,11 +82,10 @@ public class MainApp {
                         try{
                             doEnployeeLogin();
                             System.out.println("Login Successful");
-                            
-                            //need to add on
-                            frontOfficeModule = new FrontOfficeModule();
+                            frontOfficeModule = new FrontOfficeModule(walkInReservationControllerRemote, 
+                                    reservationControllerRemote, roomTypeControllerRemote, roomControllerRemote, currentEmployee);
                             systemAdministrationModule = new SystemAdministrationModule();
-                            hotelOperationModule = new HotelOperationModule();
+                            hotelOperationModule = new HotelOperationModule(roomTypeControllerRemote, roomControllerRemote, roomRateControllerRemote);
                             
                             menuMain();
                         }catch(InvalidLoginCredentialsException ex){
@@ -123,7 +135,7 @@ public class MainApp {
 
     
     //2. employee logout
-    private void menuMain() throws InvalidAccessRightException, ParseException{
+    private void menuMain() throws ParseException{
 	Scanner sc = new Scanner(System.in);
 	int response = 0;
 

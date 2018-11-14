@@ -228,7 +228,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
     
     // since allocation happens on the current day, so the start date must be today
     @Override
-    public List<Room> searchAvailableRoomsForAllocation(@NotNull Long roomTypeID, @NotNull Integer numOfRoomsRequired, @NotNull GregorianCalendar checkOutDate) throws InsufficientNumOfRoomForAllocationException {
+    public List<Room> searchAvailableRoomsForAllocation(@NotNull Long roomTypeID, @NotNull GregorianCalendar checkOutDate) {
         // retrieve all the rooms under the room type
         Query query = em.createQuery("SELECT r FROM Room r WHERE r.roomType.roomTypeId = :inRoomTypeId");
         query.setParameter("inRoomTypeId", roomTypeID);
@@ -265,11 +265,7 @@ public class RoomController implements RoomControllerRemote, RoomControllerLocal
                 }
             }
         }
-        if(availableRooms.size() >= numOfRoomsRequired){
-            return availableRooms;
-        }else{
-            throw new InsufficientNumOfRoomForAllocationException("Not enough room for allocation!");
-        }
+        return availableRooms;
     }
 
     @Override

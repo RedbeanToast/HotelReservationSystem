@@ -20,5 +20,5 @@ import javax.validation.constraints.NotNull;
 
 public interface RoomControllerLocal {
     Room retrieveRoomByRoomNumber(Integer roomNumber) throws RoomNotFoundException;
-    List<Room> searchAvailableRoomsForAllocation(@NotNull Long roomTypeID, @NotNull Integer numOfRoomsRequired, @NotNull GregorianCalendar checkOutDate) throws InsufficientNumOfRoomForAllocationException;
+    List<Room> searchAvailableRoomsForAllocation(@NotNull Long roomTypeID, @NotNull GregorianCalendar checkOutDate);
 }

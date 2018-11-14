@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Remote;
@@ -309,51 +311,67 @@ public class ReservationController implements ReservationControllerRemote, Reser
         
         // assign the reservations to rooms one by one, generate room allocation exception report if necessary
         // assumption: a guest cannot change his/her room during the stay
-        for(Reservation reservation: reservations){
-            for(ReservationLineItem reservationLineItem: reservation.getReservationLineItems()){
+        for (Reservation reservation : reservations) {
+            for (ReservationLineItem reservationLineItem : reservation.getReservationLineItems()) {
                 // note: there may be more than one room in the reservation line item,
                 // note:    and some of them are not able to be allocated -> need to check separately
-                try{
-                    List<Room> availableRooms = roomControllerLocal.searchAvailableRoomsForAllocation(reservationLineItem.getIntendedRoomType().getRoomTypeId(), reservationLineItem.getNumOfRooms(), reservationLineItem.getReservation().getCheckOut());
+                Integer numOfRoomsRequired = reservationLineItem.getNumOfRooms();
+                // retrieve all the available rooms across the period under the room type
+                List<Room> availableRooms = roomControllerLocal.searchAvailableRoomsForAllocation(reservationLineItem.getIntendedRoomType().getRoomTypeId(), reservationLineItem.getReservation().getCheckOut());
+                // compare the number of the available rooms with the number of rooms required
+                if (availableRooms.size() >= numOfRoomsRequired) {
+                    // can allocate rooms 
                     query = em.createQuery("SELECT rn FROM RoomNight rn WHERE rn.reservationLineItem.reservationLineItemId = :inReservationLineItemId ORDER BY rn.date ASC");
                     query.setParameter("inReservationLineItemId", reservationLineItem.getReservationLineItemId());
                     List<RoomNight> roomNights = query.getResultList();
                     // assign rooms to roomnight randomly 
-                    int numOfRooms = reservationLineItem.getNumOfRooms();
-                    int numOfNights = roomNights.size() / numOfRooms;
-                    for(int roomNo = 0; roomNo < numOfRooms; roomNo++){
-                        for(int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRooms){
+                    int numOfNights = roomNights.size() / numOfRoomsRequired;
+                    for (int roomNo = 0; roomNo < numOfRoomsRequired; roomNo++) {
+                        for (int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRoomsRequired) {
                             roomNights.get(roomNightNo).setRoom(availableRooms.get(roomNo));
                             availableRooms.get(roomNo).getSuccessfulReservations().add(reservationLineItem);
                         }
                     }
                     reservation.setStatus(ReservationStatusEnum.ALLOCATED);
-                }catch(InsufficientNumOfRoomForAllocationException ex){
-                    // check whether upgrade is possible
+                }else{
                     try {
+                        // insufficient number of available rooms
+                        // check whether the upgrade room type has the sufficient number of rooms for upgrade
                         RoomType upgradeRoomType = roomTypeControllerLocal.retrieveUpgradeRoomType(reservationLineItem.getIntendedRoomType());
-                        try {
-                            List<Room> availableRooms = roomControllerLocal.searchAvailableRoomsForAllocation(upgradeRoomType.getRoomTypeId(), reservationLineItem.getNumOfRooms(), reservationLineItem.getReservation().getCheckOut());
+                        // retrieve all the available rooms across the period under the upgrade room type 
+                        List<Room> availableUpgradeRooms = roomControllerLocal.searchAvailableRoomsForAllocation(upgradeRoomType.getRoomTypeId(), reservationLineItem.getReservation().getCheckOut());
+                        // compare the number of the available rooms with the number of rooms required
+                        Integer neededNumOfUpgradeRooms = numOfRoomsRequired - availableRooms.size();
+                        if (availableUpgradeRooms.size() >= neededNumOfUpgradeRooms) {
+                            // upgrade is successful
+                            // allocate rooms for room nights (first satisfy intended room type, then upgrade room type)
                             query = em.createQuery("SELECT rn FROM RoomNight rn WHERE rn.reservationLineItem.reservationLineItemId = :inReservationLineItemId ORDER BY rn.date ASC");
                             query.setParameter("inReservationLineItemId", reservationLineItem.getReservationLineItemId());
                             List<RoomNight> roomNights = query.getResultList();
-                            // assign rooms to roomnight randomly 
-                            int numOfRooms = reservationLineItem.getNumOfRooms();
-                            int numOfNights = roomNights.size() / numOfRooms;
-                            for (int roomNo = 0; roomNo < numOfRooms; roomNo++) {
-                                for (int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRooms) {
+                            // allocate rooms for intended room type 
+                            int numOfRoomsForIntendedRoomType = availableRooms.size();
+                            int numOfNights = roomNights.size() / numOfRoomsRequired;
+                            for (int roomNo = 0; roomNo < numOfRoomsForIntendedRoomType; roomNo++) {
+                                for (int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += numOfRoomsForIntendedRoomType) {
                                     roomNights.get(roomNightNo).setRoom(availableRooms.get(roomNo));
                                     availableRooms.get(roomNo).getSuccessfulReservations().add(reservationLineItem);
                                 }
                             }
+                            // allocate rooms for upgrade room type 
+                            for (int roomNo = 0; roomNo < neededNumOfUpgradeRooms; roomNo++) {
+                                for (int roomNightNo = 0; roomNightNo < roomNights.size(); roomNightNo += neededNumOfUpgradeRooms) {
+                                    roomNights.get(roomNightNo).setRoom(availableUpgradeRooms.get(roomNo));
+                                    availableUpgradeRooms.get(roomNo).getSuccessfulReservations().add(reservationLineItem);
+                                }
+                            }
                             reservation.setStatus(ReservationStatusEnum.ALLOCATED);
-                            // generate room allocation exception report
+                            // generate room allocation exception report (successful room upgrade)
                             RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();
                             report.setExceptionType(AllocationExceptionTypeEnum.UPGRADED);
                             report.setReservationLineItem(reservationLineItem);
                             em.persist(report);
-                        } catch (InsufficientNumOfRoomForAllocationException ex1) {
-                            // upgrade room type exists but there are insufficient rooms for the upgrade room type
+                        } else {
+                            // not enough rooms in upgrade room type
                             // generate room allocation exception report
                             RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();
                             report.setExceptionType(AllocationExceptionTypeEnum.UPGRADEFAILED);
@@ -361,7 +379,7 @@ public class ReservationController implements ReservationControllerRemote, Reser
                             em.persist(report);
                             reservation.setStatus(ReservationStatusEnum.FAILED);
                         }
-                    }catch(UpgradeRoomTypeNotFound ex2){
+                    } catch (UpgradeRoomTypeNotFound ex) {
                         // no upgrade room type available
                         // generate room allocation exception report
                         RoomAllocationExceptionReport report = new RoomAllocationExceptionReport();

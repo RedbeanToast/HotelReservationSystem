@@ -19,11 +19,8 @@ import entities.RoomRate;
 import entities.RoomType;
 import enumerations.RoomStatusEnum;
 import exceptions.CreateNewRoomException;
-import exceptions.CreateNewRoomRateException;
 import exceptions.DeleteRoomException;
 import exceptions.DeleteRoomRateException;
-import exceptions.InputDataValidationException;
-import exceptions.InvalidAccessRightException;
 import exceptions.RoomNotFoundException;
 import exceptions.RoomRateNotFoundException;
 import exceptions.RoomTypeNotFoundException;
@@ -39,12 +36,14 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import exceptions.CreateNewRoomTypeException;
 import exceptions.DeleteRoomTypeException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.function.Function;
+import javax.ejb.EJB;
+import javax.validation.Validation;
 /**
  *
  * @author zhangruichun
@@ -55,23 +54,26 @@ public class HotelOperationModule {
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
+    @EJB
     private RoomTypeControllerRemote roomTypeControllerRemote;
+    @EJB
     private RoomControllerRemote roomControllerRemote;
+    @EJB
     private RoomRateControllerRemote roomRateControllerRemote;
+    @EJB
     private ReservationControllerRemote reservationControllerRemote;
     
     public HotelOperationModule() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
     }
     
     
-    public HotelOperationModule(ValidatorFactory validatorFactory, Validator validator) {
-        this.validatorFactory = validatorFactory;
-        this.validator = validator;
-    }
+    
 
-    public HotelOperationModule(ValidatorFactory validatorFactory, Validator validator, RoomTypeControllerRemote roomTypeControllerRemote, RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote) {
-        this.validatorFactory = validatorFactory;
-        this.validator = validator;
+    public HotelOperationModule(RoomTypeControllerRemote roomTypeControllerRemote, RoomControllerRemote roomControllerRemote, RoomRateControllerRemote roomRateControllerRemote) {
+        this();
+        
         this.roomTypeControllerRemote = roomTypeControllerRemote;
         this.roomControllerRemote = roomControllerRemote;
         this.roomRateControllerRemote = roomRateControllerRemote;
@@ -146,7 +148,7 @@ public class HotelOperationModule {
     private void doCreateNewRoomType() {
         Scanner sc = new Scanner(System.in);
         RoomType newRoomType = new RoomType();
-        List<String> amenities;
+        List<String> amenities = new ArrayList<>();
 
         System.out.println("*** Hors Management System:: Hotel Operation:: Operation Manager:: Create New Room Type ***");
         System.out.print("Enter Name>");
@@ -525,7 +527,7 @@ public class HotelOperationModule {
 
     //16. View room allocation exception report
     private void doViewRoomAllocationExceptionReport() {
-        List<RoomAllocationExceptionReport> reports = reservationControllerRemote.retrieveRoomAllocationExceptionReports()();
+        List<RoomAllocationExceptionReport> reports = reservationControllerRemote.retrieveRoomAllocationExceptionReports();
         
         for(RoomAllocationExceptionReport report: reports){
             System.out.print("Year> "+report.getRoomNight().getDate().get(Calendar.YEAR)+"> ");
@@ -538,7 +540,7 @@ public class HotelOperationModule {
         }
     }
 
-    public void menuSalesManager() throws InvalidAccessRightException, ParseException {
+    public void menuSalesManager() throws ParseException {
         Scanner sc = new Scanner(System.in);
         int response;
 

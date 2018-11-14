@@ -5,12 +5,15 @@
  */
 package HorsManagementClient;
 
+import ejb.session.stateful.WalkInReservationControllerRemote;
 import ejb.session.stateless.EmployeeControllerRemote;
+import ejb.session.stateless.ReservationControllerRemote;
 import ejb.session.stateless.RoomControllerRemote;
 import ejb.session.stateless.RoomRateControllerRemote;
 import ejb.session.stateless.RoomTypeControllerRemote;
 import exceptions.EmployeeNotFoundException;
-import exceptions.InvalidAccessRightException;
+import java.text.ParseException;
+
 import javax.ejb.EJB;
 
 /**
@@ -28,10 +31,14 @@ public class Main {
     private static RoomRateControllerRemote roomRateControllerRemote;
     @EJB 
     private static RoomTypeControllerRemote roomTypeControllerRemote;
+    @EJB
+    private static WalkInReservationControllerRemote walkInReservationControllerRemote;
+    @EJB
+    private static ReservationControllerRemote reservationControllerRemote;
     
     
-    public static void main(String[] args) throws EmployeeNotFoundException, InvalidAccessRightException{
-        MainApp mainApp = new MainApp(employeeControllerRemote,roomControllerRemote,roomRateControllerRemote,roomTypeControllerRemote);
+    public static void main(String[] args) throws EmployeeNotFoundException, ParseException{
+        MainApp mainApp = new MainApp(employeeControllerRemote,roomControllerRemote,roomRateControllerRemote,roomTypeControllerRemote, walkInReservationControllerRemote, reservationControllerRemote);
 	mainApp.runApp();
     }
 }

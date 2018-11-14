@@ -6,14 +6,19 @@
 package HorsManagementClient;
 
 import ejb.session.stateless.EmployeeControllerRemote;
+import ejb.session.stateless.PartnerControllerRemote;
 import entities.Employee;
 import entities.Partner;
-import exceptions.InvalidAccessRightException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 import javax.validation.ConstraintViolation;
 import enumerations.JobRoleEnum;
+import exceptions.CreateNewPartnerException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.ejb.EJB;
+import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 /**
@@ -22,36 +27,35 @@ import javax.validation.ValidatorFactory;
  */
 public class SystemAdministrationModule {
 
+    @EJB
     private EmployeeControllerRemote employeeControllerRemote;
+    @EJB
     private PartnerControllerRemote partnerControllerRemote;
     
     private final ValidatorFactory validatorFactory;
     private final Validator validator;
 
     public SystemAdministrationModule() {
+        validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
     }
     
     
 
-    public SystemAdministrationModule(ValidatorFactory validatorFactory, Validator validator) {
-        this.validatorFactory = validatorFactory;
-        this.validator = validatorFactory.getValidator();
-    }
-    
+   
     
 
     public SystemAdministrationModule(EmployeeControllerRemote employeeControllerRemote, PartnerControllerRemote partnerControllerRemote,ValidatorFactory validatorFactory, Validator validator) {
-        this.validatorFactory = validatorFactory;
-        this.validator = validatorFactory.getValidator();
+        this();
         this.employeeControllerRemote = employeeControllerRemote;
         this.partnerControllerRemote = partnerControllerRemote;
     }
 
     /**
      *
-     * @throws InvalidAccessRightException
+     * 
      */
-    public void menuSystemAdministration() throws InvalidAccessRightException {
+    public void menuSystemAdministration(){
         Scanner sc = new Scanner(System.in);
         int response;
         while (true) {
@@ -170,7 +174,11 @@ public class SystemAdministrationModule {
         Set<ConstraintViolation<Partner>> constraintViolations = validator.validate(partner);
 
         if (constraintViolations.isEmpty()) {
-            partner = partnerControllerRemote.createNewPartner(partner);
+            try {
+                partner = partnerControllerRemote.createNewPartner(partner);
+            } catch (CreateNewPartnerException ex) {
+                System.out.println(ex.getMessage());
+            }
             System.out.println("New partner created successfully");
         } else {
             showInputDataValidationErrorsForPartner(constraintViolations);

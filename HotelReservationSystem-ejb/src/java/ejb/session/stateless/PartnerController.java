@@ -10,6 +10,7 @@ import entities.Partner;
 import entities.Reservation;
 import entities.ReservationLineItem;
 import entities.RoomType;
+import exceptions.CreateNewPartnerException;
 import exceptions.InvalidLoginCredentialsException;
 import exceptions.PartnerNotFoundException;
 import exceptions.ReservationNotFoundException;
@@ -19,6 +20,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Local;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -34,7 +36,8 @@ import utilities.RoomSearchResult;
  */
 @Stateless
 @Local(PartnerControllerLocal.class)
-public class PartnerController implements PartnerControllerLocal {
+@Remote(PartnerControllerRemote.class)
+public class PartnerController implements PartnerControllerLocal, PartnerControllerRemote {
 
     @PersistenceContext(unitName = "HotelReservationSystem-ejbPU")
     private EntityManager em;
@@ -113,6 +116,27 @@ public class PartnerController implements PartnerControllerLocal {
             return partner;
         }catch(NoResultException | NonUniqueResultException ex){
             throw new PartnerNotFoundException("Partner " + name + " does not exist!");
+        }
+    }
+    
+    @Override
+    public List<Partner> retrieveAllPartners() {
+        Query query = em.createQuery("SELECT p FROM Partner p");
+        List<Partner> partners = query.getResultList();
+        return partners;
+    }
+    
+    @Override
+    public Partner createNewPartner(@NotNull Partner partner) throws CreateNewPartnerException {
+        Query query = em.createQuery("SELECT p FROM Partner p WHERE p.name = :inName");
+        query.setParameter("inName", partner.getName());
+        Partner partnerFound = (Partner)query.getSingleResult();
+        if(partnerFound != null){
+            throw new CreateNewPartnerException("Partner with name" + partnerFound.getName() + " already exists!");
+        }else{
+            em.persist(partner);
+            em.flush();
+            return partner;
         }
     }
 }
